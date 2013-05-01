@@ -39,7 +39,7 @@ do
 		TITLE=$(curl --silent http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topic/get/json/${CS_ID} | grep -Po '(?<="title":").*?(?=",)')
 	
 		# Add an entry to the index page
-		echo "<a href=\"${CS_ID}\">${CS_ID}: ${TITLE}</a> <a href=\"${CS_ID}\build.log\"><button>Build Log</button></a> <a href=\"${CS_ID}\publican.log\"><button>Publican Log</button></a><br/>" >> ${INDEX_TMP_FILE}
+		echo "<a href=\"${CS_ID}\">${CS_ID}: ${TITLE}</a> <a href=\"${CS_ID}/build.log\"><button>Build Log</button></a> <a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a><br/>" >> ${INDEX_TMP_FILE}
 	
 		# Sleep until a core is free for another publican build
 		PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
