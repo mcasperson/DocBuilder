@@ -43,7 +43,7 @@ do
 		while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge ${CORE_COUNT} ]
 		do
 			echo Sleeping until publican and csprocessor finish
-			sleep 30;
+			sleep 10;
 			
 			PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
 			CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor | wc -l)
