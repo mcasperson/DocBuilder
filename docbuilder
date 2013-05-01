@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # This script runs as a continuous loop. It performs the following:
 # 1. Download all content spec IDs from the server
 # 2. Loop over the content spec IDS
