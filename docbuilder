@@ -21,7 +21,7 @@ INDEX_TMP_FILE=/tmp/index.html
 # Start the infinite loop
 while "true"
 do
-  # Dump the HTML header boilderplate	
+	# Dump the HTML header boilderplate	
 	echo "<html style=\"font-family:sans-serif\"><head><title>Docbuilder Index</title></head><body><div><img height=\"87\" src=\"pg.png\" width=\"293\"></div><div style=\"margin-top:1em\">" > ${INDEX_TMP_FILE}
 
 	# Loop over each content spec ID
@@ -34,7 +34,7 @@ do
 	
 		# Sleep until a core is free for another publican build
 		PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
-		CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor | wc -l)
+		CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
 		echo ${PUBLICAN_COUNT} instances of publican running.
 		echo ${CSPROCESSOR_COUNT} instances of csprocessor running. 
 		
