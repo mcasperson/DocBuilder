@@ -119,7 +119,7 @@ do
 		then
 			echo Recompiling ${CS_ID}
 		
-			#${BOOK_BUILD_SCRIPT} ${CS_ID} ${CS_ID} > /dev/null 2>&1 &
+			${BOOK_BUILD_SCRIPT} ${CS_ID} ${CS_ID} > /dev/null 2>&1 &
 		fi	
 		
 		#break
