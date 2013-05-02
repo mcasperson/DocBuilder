@@ -38,10 +38,11 @@ do
 	do
 		CONTENT_SPEC=$(curl --silent http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topic/get/json/${CS_ID})
 		TITLE=$(echo ${CONTENT_SPEC} | grep -Po '(?<="title":").*?(?=",)')
-		PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Product = \(\\w*\)\\\\n.*$/\1/p")
+		PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Product = \([0-9A-Za-z_ ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
+		PRODUCT=${PRODUCT//\'/\\\'}
+		TITLE=${TITLE//\'/\\\'}
 	
-		# Add an entry to the index page
-		echo "{ id: '<a href=\"${CS_ID}\">${CS_ID}</a>', product: '<a href=\"${CS_ID}\">${PRODUCT}</a>', title: '<a href=\"${CS_ID}\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>'}," >> ${INDEX_TMP_FILE}
+
 	
 		# Sleep until a core is free for another publican build
 		PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
@@ -109,6 +110,11 @@ do
 				date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
 			fi
 		fi
+		
+		LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
+		
+		# Add an entry to the index page
+		echo "{ id: '<a href=\"${CS_ID}\">${CS_ID}</a>', product: '<a href=\"${CS_ID}\">${PRODUCT}</a>', title: '<a href=\"${CS_ID}\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
 		
 		# Build the book
 		if [ ${RECOMPILE} = "true" ]
