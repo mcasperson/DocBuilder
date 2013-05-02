@@ -127,7 +127,7 @@ do
 	done
 	
 	# Finish the index page, and copy to the www dir
-	echo " ]; var table = new Y.DataTable({ columns: [ {key: \"id\", label: \"ID\", allowHTML: true}, {key: \"product\", label: \"Product\", allowHTML: true}, {key: \"title\", label: \"Title\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('titleRaw'), second   = b.get('titleRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"buildlog\", label: \"Build Log\", allowHTML: true}, {key: \"publicanlog\", label: \"Publican Log\", allowHTML: true} ], sortable: [\"id\", \"product\", \"title\"], data: data }); table.render(\"#table\"); }); </script> </body></html>" >> ${INDEX_TMP_FILE}
+	echo " ]; var table = new Y.DataTable({ columns: [ {key: \"id\", label: \"ID\", allowHTML: true}, {key: \"product\", label: \"Product\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('productRaw'), second   = b.get('productRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"title\", label: \"Title\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('titleRaw'), second   = b.get('titleRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"buildlog\", label: \"Build Log\", allowHTML: true}, {key: \"publicanlog\", label: \"Publican Log\", allowHTML: true} ], sortable: [\"id\", \"product\", \"title\"], data: data }); table.render(\"#table\"); }); </script> </body></html>" >> ${INDEX_TMP_FILE}
 	rm -f /var/www/html/index.html.old
 	mv /var/www/html/index.html /var/www/html/index.html.old
 	cp  ${INDEX_TMP_FILE} /var/www/html
