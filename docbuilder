@@ -115,7 +115,7 @@ do
 		LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 		
 		# Add an entry to the index page
-		echo "{ idRaw: ${CS_ID}, id: '<a href=\"${CS_ID}\">${CS_ID}</a>', versionRaw: ${VERSION}, version: '<a href=\"${CS_ID}\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"${CS_ID}\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"${CS_ID}\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
+		echo "{ idRaw: ${CS_ID}, id: '<a href=\"${CS_ID}\">${CS_ID}</a>', versionRaw: '${VERSION}', version: '<a href=\"${CS_ID}\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"${CS_ID}\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"${CS_ID}\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
 		
 		# Build the book
 		if [ ${RECOMPILE} = "true" ]
