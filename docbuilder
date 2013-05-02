@@ -38,7 +38,7 @@ do
 	do
 		CONTENT_SPEC=$(curl --silent http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topic/get/json/${CS_ID})
 		TITLE=$(echo ${CONTENT_SPEC} | grep -Po '(?<="title":").*?(?=",)')
-		PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Product = \([0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
+		PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Product\\s*=\\s*\([0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
 		PRODUCT=${PRODUCT//\'/\\\'}
 		TITLE=${TITLE//\'/\\\'}
 	
