@@ -1,0 +1,15 @@
+Section:
+abstract, address, anchor, authorblurb, beginpage, bibliography, bibliolist, blockquote, bridgehead, calloutlist, caution, classsynopsis, cmdsynopsis, constraintdef, constructorsynopsis, destructorsynopsis, epigraph, equation, example, fieldsynopsis, figure, formalpara, funcsynopsis, glossary, glosslist, graphic, graphicco, highlights, important, index, indexterm, informalequation, informalexample, informalfigure, informaltable, itemizedlist, literallayout, lot, mediaobject, mediaobjectco, methodsynopsis, msgset, note, orderedlist, para, procedure, productionset, programlisting, programlistingco, qandaset, refentry, remark, screen, screenco, screenshot, section, segmentedlist, sidebar, simpara, simplelist, simplesect, subtitle, synopsis, table, task, tip, title, titleabbrev, toc, variablelist, warning.
+
+Chapter:
+abstract, address, anchor, authorblurb, beginpage, bibliography, bibliolist, blockquote, bridgehead, calloutlist, caution, classsynopsis, cmdsynopsis, constraintdef, constructorsynopsis, destructorsynopsis, epigraph, equation, example, fieldsynopsis, figure, formalpara, funcsynopsis, glossary, glosslist, graphic, graphicco, highlights, important, index, indexterm, informalequation, informalexample, informalfigure, informaltable, itemizedlist, literallayout, lot, mediaobject, mediaobjectco, methodsynopsis, msgset, note, orderedlist, para, procedure, productionset, programlisting, programlistingco, qandaset, refentry, remark, screen, screenco, screenshot, section, segmentedlist, sidebar, simpara, simplelist, simplesect, subtitle, synopsis, table, task, tip, title, titleabbrev, toc, variablelist, warning.
+
+
+sect1, sectioninfo
+
+
+chapterinfo, tocchap
+
+
+
+abstract, address, anchor, authorblurb, beginpage, bibliography, bibliolist, blockquote, bridgehead, calloutlist, caution, chapterinfo, classsynopsis, cmdsynopsis, constraintdef, constructorsynopsis, destructorsynopsis, epigraph, equation, example, fieldsynopsis, figure, formalpara, funcsynopsis, glossary, glosslist, graphic, graphicco, highlights, important, index, indexterm, informalequation, informalexample, informalfigure, informaltable, itemizedlist, literallayout, lot, mediaobject, mediaobjectco, methodsynopsis, msgset, note, orderedlist, para, procedure, productionset, programlisting, programlistingco, qandaset, refentry, remark, screen, screenco, screenshot, sect1, section, segmentedlist, sidebar, simpara, simplelist, simplesect, subtitle, synopsis, table, task, tip, title, titleabbrev, toc, tocchap, variablelist, warning.
