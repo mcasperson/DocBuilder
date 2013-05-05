@@ -57,7 +57,7 @@ do
 			sleep 10;
 			
 			PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
-			CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor | wc -l)
+			CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
 			echo ${PUBLICAN_COUNT} instances of publican running.
 			echo ${CSPROCESSOR_COUNT} instances of csprocessor running. 
 		done
@@ -75,7 +75,7 @@ do
 		# Check for the last time we recompiled the content spec
 		if [ -f ${CS_FILENAME} ]
 		then
-			echo Last compile data was found for ${CS_ID}. Checking for changes.
+			echo "Last compile data was found for ${CS_ID}. Checking for changes."
 		
 			LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 			LAST_COMPILE_ENCODED=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$LAST_COMPILE") 
@@ -91,12 +91,12 @@ do
 			if [[ ${NUMBER_TOPICS} -eq "0" ]] && [[ ${SPEC_HAS_CHANGED} -eq "0" ]]
 			then
 				RECOMPILE=false
-				echo No changes were found for ${CS_ID}.
+				echo "No changes were found for ${CS_ID}."
 			else
 				date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
 			fi
 		else
-			echo Last compile data was not found for ${CS_ID} and was set to now.
+			echo "Last compile data was not found for ${CS_ID} and was set to now."
 		
 			date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
 		fi
@@ -106,7 +106,7 @@ do
 		then
 			if [ ! -f /var/www/html/${CS_ID}/index.html ]
 			then
-				echo Last build for ${CS_ID} failed because there is no index.html
+				echo "Last build for ${CS_ID} failed because there is no index.html"
 				RECOMPILE=true
 				date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
 			fi

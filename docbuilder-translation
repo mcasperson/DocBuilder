@@ -15,7 +15,7 @@ BOOK_BUILD_SCRIPT=/root/build_books.sh
 # The index file that is built up with each locale
 INDEX_TMP_FILE=/tmp/index-translation.html
 # Locale build information directory
-LANG_DATA_DIR=/root/
+LANG_DATA_DIR=/root/translations/
 # Languages to build in
 LANGS=("ja=ja-JP", "fr=fr-FR", "pt-BR=pt-BR", "de=de-DE", "es=es-ES", "zh-Hans=zh-CN")
 # Get the number of cores
@@ -78,10 +78,10 @@ do
 	  while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge ${CORE_COUNT} ]
 	  do
 		  echo "Sleeping until publican and csprocessor finish"
-		  sleep 10;
+		  sleep 20;
 		
 		  PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
-		  CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor | wc -l)
+		  CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
 		  echo ${PUBLICAN_COUNT} instances of publican running.
 		  echo ${CSPROCESSOR_COUNT} instances of csprocessor running. 
 	  done
@@ -135,4 +135,17 @@ do
   rm -f /var/www/html/${BUILD_LANG}/index.html.old
   mv /var/www/html/${BUILD_LANG}/index.html /var/www/html/${BUILD_LANG}/index.html.old
   cp  ${INDEX_TMP_FILE} /var/www/html/${BUILD_LANG}/index.html
+done
+
+# Sleep until the builds have finished
+PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
+CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
+
+while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge 1 ]
+do
+  echo "Waiting for builds to finish"
+  sleep 20;
+
+  PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
+  CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
 done

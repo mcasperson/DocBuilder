@@ -49,7 +49,7 @@ do
   # Extract the language, Common Content language and CSP id
   # from the command line argument
 	BUILD_LANG=${ADDR[0]}
-	COMMON_LANG=${ADDR[1]}
+	PUBLICAN_LANG=${ADDR[1]}
 	CSPID=${ADDR[2]}
 
   # Shift the arguments down
@@ -68,8 +68,8 @@ do
 
 	date > build.log
 
-		echo "csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --common-content ${COMMON_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
-		csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --common-content ${COMMON_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
+		echo "csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
+		csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
 
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
