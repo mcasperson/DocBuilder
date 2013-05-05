@@ -9,16 +9,13 @@
 # The script will only initiate as many concurrent rebuilds as the local PC has CPU cores.
 
 # The location where info about last build times is stored
-DOCBUILDER_DATA_DIR=/home/lnewson/.docbuilder
-#DOCBUILDER_DATA_DIR=/root/.docbuilder
+DOCBUILDER_DATA_DIR=/root/.docbuilder
 # The script to call to actually build the books
-BOOK_BUILD_SCRIPT=/home/lnewson/bin/build_books.sh
-#BOOK_BUILD_SCRIPT=/root/build_books.sh
+BOOK_BUILD_SCRIPT=/root/build_books.sh
 # The index file that is built up with each locale
 INDEX_TMP_FILE=/tmp/index-translation.html
 # Locale build information directory
-LANG_DATA_DIR=/home/lnewson/
-#LANG_DATA_DIR=/root/
+LANG_DATA_DIR=/root/
 # Languages to build in
 LANGS=("ja=ja-JP", "fr=fr-FR", "pt-BR=pt-BR", "de=de-DE", "es=es-ES", "zh-Hans=zh-CN")
 # Get the number of cores
@@ -44,7 +41,7 @@ do
   BUILD_LANG_FILE="${LANG_DATA_DIR}${BUILD_LANG}.txt"
   if [[ ! -f "$BUILD_LANG_FILE" ]]
   then
-    echo "Unable to find ${BUILD_LANG_FILE}, skipping ${BUILD_LANG}."
+    echo "Unable to find '${BUILD_LANG_FILE}', skipping ${BUILD_LANG}."
     continue
   fi
 
@@ -53,8 +50,16 @@ do
 	# Dump the HTML header boilderplate	
 	echo "<html> <head> <title>Docbuilder ${BUILD_LANG} Index</title> <link rel=\"stylesheet\" href=\"../index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script> </head> <body> <div><img height=\"87\" src=\"../pg.png\" width=\"879\"></div><div style=\"margin-top:1em\"><p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p><p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p><p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p><p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in Zanata.</p><p>To view the latest changes to a document, simply refresh the page.</p></div> <div style=\"margin-top:1em\" class=\"yui3-skin-sam\" id=\"table\"> </div> <script> YUI().use('datatable', function (Y) { var data = [" > ${INDEX_TMP_FILE}
 
-  for CSP_ID in $BUILD_LANG_FILE
+  # Read in each line of the build language file to get the Content Spec IDs to build
+  while read CS_ID
   do
+    # Check that the line isn't empty or a comment
+    if [[ "$CS_ID" =~ ^#.*$ ]] || [ -z "$CS_ID" ]
+    then
+      continue
+    fi
+
+    #echo ${CS_ID}
 	  CONTENT_SPEC=$(curl --silent http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topic/get/json/${CS_ID})
 	
 	  TITLE=$(echo ${CONTENT_SPEC} | grep -Po '(?<="title":").*?(?=",)')
@@ -82,6 +87,7 @@ do
 	  done
 	
 	  CS_FILENAME=${DOCBUILDER_DATA_DIR}/${BUILD_LANG}/${CS_ID}
+    #echo $CS_FILENAME
 	
 	  # Create the data directory if it does not exist
 	  if [ ! -d "${DOCBUILDER_DATA_DIR}/${BUILD_LANG}" ]
@@ -105,7 +111,7 @@ do
 	  LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 	
 	  # Add an entry to the index page
-	  echo "{ idRaw: ${CS_ID}, id: '<a href=\"${BUILD_LANG}/${CS_ID}\" target=\"_top\">${CS_ID}</a>', versionRaw: '${VERSION}', version: '<a href=\"${BUILD_LANG}/${CS_ID}\"  target=\"_top\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"${BUILD_LANG}/${CS_ID}\" target=\"_top\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"${BUILD_LANG}/${CS_ID}\"  target=\"_top\">${TITLE}</a>', buildlog: '<a href=\"${BUILD_LANG}/${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${BUILD_LANG}/${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
+	  echo "{ idRaw: ${CS_ID}, id: '<a href=\"${CS_ID}\" target=\"_top\">${CS_ID}</a>', versionRaw: '${VERSION}', version: '<a href=\"${CS_ID}\"  target=\"_top\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"${CS_ID}\" target=\"_top\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"${CS_ID}\"  target=\"_top\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
 	
 	  # Build the book
 	  echo Recompiling ${CS_ID}
@@ -114,10 +120,18 @@ do
 	
 	  #break
 
-  done
+  done < $BUILD_LANG_FILE
 	
   # Finish the index page, and copy to the www dir
   echo " ]; var table = new Y.DataTable({ columns: [ {key: \"id\", label: \"ID\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('idRaw'), second   = b.get('idRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"product\", label: \"Product\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('productRaw'), second   = b.get('productRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"version\", label: \"Version\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('versionRaw'), second   = b.get('versionRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"title\", label: \"Title\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('titleRaw'), second   = b.get('titleRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"buildlog\", label: \"Build Log\", allowHTML: true}, {key: \"publicanlog\", label: \"Publican Log\", allowHTML: true} ], sortable: [\"id\", \"product\", \"title\", \"version\"], data: data }); table.render(\"#table\"); }); </script> </body></html>" >> ${INDEX_TMP_FILE}
+
+  # Create the html language directory if it does not exist
+  if [ ! -d /var/www/html/${BUILD_LANG} ]
+  then
+	  echo "${BUILD_LANG} HTML directory was not present, and was created."
+	  mkdir -p /var/www/html/${BUILD_LANG}
+  fi
+
   rm -f /var/www/html/${BUILD_LANG}/index.html.old
   mv /var/www/html/${BUILD_LANG}/index.html /var/www/html/${BUILD_LANG}/index.html.old
   cp  ${INDEX_TMP_FILE} /var/www/html/${BUILD_LANG}/index.html

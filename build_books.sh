@@ -66,25 +66,21 @@ do
 	# Enter the temp directory
 	pushd ${TMP_DIR}${DIR_SUFFIX}
 
-    date > build.log
+	date > build.log
 
-		echo csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --common-content ${COMMON_LANG} --output ${BOOKNAME}.zip ${CSPID}
-		csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --common-content ${COMMON_LANG} --output ${BOOKNAME}.zip ${CSPID}
+		echo "csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --common-content ${COMMON_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
+		csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --common-content ${COMMON_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
 
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
 		then
-			if [ -d /var/www/html/${CSPID} ]
-      then
-        rm -rf /var/www/html/${CSPID}
-      fi
+			cleanHTMLDir ${BUILD_LANG}/${CSPID}
 
 			mkdir /var/www/html/${BUILD_LANG}/${CSPID}
 			cp build.log /var/www/html/${BUILD_LANG}/${CSPID}
 
 			continue
 		fi		
-
 
 		unzip ${BOOKNAME}.zip
 
@@ -99,7 +95,6 @@ do
 			pushd ${dir}
 
 				echo "publican build --formats=html-single --langs=${BUILD_LANG} &> publican.log"
-
 				publican build --formats=html-single --langs=${BUILD_LANG} &> publican.log
 
 				# If the publican build fails then put the log in the html dir
@@ -116,12 +111,7 @@ do
 				
 				cp -R tmp/${BUILD_LANG}/html-single/* /var/www/html/${BUILD_LANG}/${CSPID}
 
-				cleanHTMLDir ${BUILD_LANG}/${CSPID}
-        mkdir -p /var/www/html/${BUILD_LANG}/${CSPID}
-
-				cp -R tmp/${BUILD_LANG}/html-single/* /var/www/html/${BUILD_LANG}/${CSPID}
-
-
+				cp publican.log /var/www/html/${BUILD_LANG}/${CSPID}
 			popd
 			
 			# we only want to process one directory
@@ -129,5 +119,6 @@ do
 
 		done
 
+		cp build.log /var/www/html/${BUILD_LANG}/${CSPID}
 	popd
 done
