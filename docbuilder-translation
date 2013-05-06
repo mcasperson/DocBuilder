@@ -17,7 +17,7 @@ INDEX_TMP_FILE=/tmp/index-translation.html
 # Locale build information directory
 LANG_DATA_DIR=/root/translations/
 # Languages to build in
-LANGS=("ja=ja-JP", "fr=fr-FR", "pt-BR=pt-BR", "de=de-DE", "es=es-ES", "zh-Hans=zh-CN")
+LANGS=("ja=ja-JP" "fr=fr-FR" "pt-BR=pt-BR" "de=de-DE" "es=es-ES" "zh-Hans=zh-CN")
 # Get the number of cores
 CORE_COUNT=`grep -c ^processor /proc/cpuinfo`
 

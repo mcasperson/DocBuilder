@@ -109,7 +109,7 @@ do
 				backupAndCleanHTMLDir ${BUILD_LANG}/${CSPID}
 				mkdir -p /var/www/html/${BUILD_LANG}/${CSPID}
 				
-				cp -R tmp/${BUILD_LANG}/html-single/* /var/www/html/${BUILD_LANG}/${CSPID}
+				cp -R tmp/${PUBLICAN_LANG}/html-single/* /var/www/html/${BUILD_LANG}/${CSPID}
 
 				cp publican.log /var/www/html/${BUILD_LANG}/${CSPID}
 			popd
