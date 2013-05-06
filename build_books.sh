@@ -94,8 +94,8 @@ do
 			# Enter the extracted book directory
 			pushd ${dir}
 
-				echo "publican build --formats=html-single --langs=${BUILD_LANG} &> publican.log"
-				publican build --formats=html-single --langs=${BUILD_LANG} &> publican.log
+				echo "publican build --formats=html-single --langs=${PUBLICAN_LANG} &> publican.log"
+				publican build --formats=html-single --langs=${PUBLICAN_LANG} &> publican.log
 
 				# If the publican build fails then put the log in the html dir
 				if [ $? != 0 ]
