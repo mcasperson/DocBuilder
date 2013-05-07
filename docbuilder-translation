@@ -48,7 +48,16 @@ do
   echo "Starting to build ${BUILD_LANG} books."
 
 	# Dump the HTML header boilderplate	
-	echo "<html> <head> <title>Docbuilder ${BUILD_LANG} Index</title> <link rel=\"stylesheet\" href=\"../index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script> </head> <body> <div><img height=\"87\" src=\"../pg.png\" width=\"879\"></div><div style=\"margin-top:1em\"><p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p><p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p><p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p><p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in Zanata.</p><p>To view the latest changes to a document, simply refresh the page.</p></div> <div style=\"margin-top:1em\" class=\"yui3-skin-sam\" id=\"table\"> </div> <script> YUI().use('datatable', function (Y) { var data = [" > ${INDEX_TMP_FILE}
+	echo "<html> <head> <title>Docbuilder ${BUILD_LANG} Index</title> <link rel=\"stylesheet\" href=\"../index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script><script src=\"../functions.js\" ></script> </head> <body onload=\"setLangSelectLanguage()\"> <div class=\"container\"><div class=\"langBar\">Language: <select id=\"lang\" class=\"langSelect\" onchange=\"changeLang(this)\">
+<option selected value=\"\"></option>
+<option value=\"zh-Hans\">Chinese</option>
+<option value=\"fr\">French</option>
+<option value=\"de\">German</option>
+<option value=\"ja\">Japanese</option>
+<option value=\"pt-BR\">Portuguese</option>
+<option value=\"es\">Spanish</option>
+</select></div>
+<div class=\"content\"><div><img height=\"87\" src=\"../pg.png\" width=\"879\"></div><div style=\"margin-top:1em\"><p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p><p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p><p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p><p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in Zanata.</p><p>To view the latest changes to a document, simply refresh the page.</p></div> <div style=\"margin-top:1em\" class=\"yui3-skin-sam\" id=\"table\"> </div></div></div> <script> YUI().use('datatable', function (Y) { var data = [" > ${INDEX_TMP_FILE}
 
   # Read in each line of the build language file to get the Content Spec IDs to build
   while read CS_ID
