@@ -7,9 +7,9 @@ function changeLang(langSelect) {
   var lang = langSelect.options[langSelect.selectedIndex].value;
   if (lang != null) {
     if (lang == "") {
-        window.top.location = getBaseURL();
+        window.location = getBaseURL();
     } else {
-        window.top.location = getBaseURL() + lang + '/';
+        window.location = getBaseURL() + lang + '/';
     }
   }
 }
