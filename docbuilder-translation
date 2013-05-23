@@ -49,7 +49,7 @@ do
 
 	# Dump the HTML header boilderplate	
 	echo "<html> <head> <title>Docbuilder ${BUILD_LANG} Index</title> <link rel=\"stylesheet\" href=\"../index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script><script src=\"../functions.js\" ></script> </head> <body onload=\"setLangSelectLanguage()\"> <div class=\"container\"><div class=\"langBar\">Language: <select id=\"lang\" class=\"langSelect\" onchange=\"changeLang(this)\">
-<option selected value=\"\"></option>
+<option selected value=\"\">English</option>
 <option value=\"zh-Hans\">Chinese</option>
 <option value=\"fr\">French</option>
 <option value=\"de\">German</option>
@@ -76,7 +76,11 @@ do
 	  VERSION=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Version\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
 	
 	  PRODUCT=${PRODUCT//\'/\\\'}
+    ESCAPED_PRODUCT=${PRODUCT// /_}
+    ESCAPED_PRODUCT=${ESCAPED_PRODUCT//[^A-Za-z0-9_.-]/}
 	  TITLE=${TITLE//\'/\\\'}
+    ESCAPED_TITLE=${TITLE// /_}
+    ESCAPED_TITLE=${ESCAPED_TITLE//[^A-Za-z0-9_.-]/}
 
 	  # Sleep until a core is free for another publican build
 	  PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
@@ -120,7 +124,7 @@ do
 	  LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 	
 	  # Add an entry to the index page
-	  echo "{ idRaw: ${CS_ID}, id: '<a href=\"${CS_ID}\" target=\"_top\">${CS_ID}</a>', versionRaw: '${VERSION}', version: '<a href=\"${CS_ID}\"  target=\"_top\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"${CS_ID}\" target=\"_top\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"${CS_ID}\"  target=\"_top\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
+	  echo "{ idRaw: ${CS_ID}, id: '<a href=\"${CS_ID}\" target=\"_top\">${CS_ID}</a>', versionRaw: '${VERSION}', version: '<a href=\"${CS_ID}\"  target=\"_top\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"${CS_ID}\" target=\"_top\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"${CS_ID}\"  target=\"_top\">${TITLE}</a>', pdfLink: '<a href=\"${CS_ID}/${ESCAPED_PRODUCT}-${VERSION}-${ESCAPED_TITLE}-${PUBLICAN_LANG}.pdf\">PDF</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
 	
 	  # Build the book
 	  echo Recompiling ${CS_ID}
@@ -132,7 +136,7 @@ do
   done < $BUILD_LANG_FILE
 	
   # Finish the index page, and copy to the www dir
-  echo " ]; var table = new Y.DataTable({ columns: [ {key: \"id\", label: \"ID\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('idRaw'), second   = b.get('idRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"product\", label: \"Product\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('productRaw'), second   = b.get('productRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"version\", label: \"Version\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('versionRaw'), second   = b.get('versionRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"title\", label: \"Title\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('titleRaw'), second   = b.get('titleRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"buildlog\", label: \"Build Log\", allowHTML: true}, {key: \"publicanlog\", label: \"Publican Log\", allowHTML: true} ], sortable: [\"id\", \"product\", \"title\", \"version\"], data: data }); table.render(\"#table\"); }); </script> </body></html>" >> ${INDEX_TMP_FILE}
+  echo " ]; var table = new Y.DataTable({ columns: [ {key: \"id\", label: \"ID\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('idRaw'), second   = b.get('idRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"product\", label: \"Product\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('productRaw'), second   = b.get('productRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"version\", label: \"Version\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('versionRaw'), second   = b.get('versionRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"title\", label: \"Title\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('titleRaw'), second   = b.get('titleRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"pdfLink\", label: \"PDF Link\", allowHTML: true}, {key: \"buildlog\", label: \"Build Log\", allowHTML: true}, {key: \"publicanlog\", label: \"Publican Log\", allowHTML: true} ], sortable: [\"id\", \"product\", \"title\", \"version\"], data: data }); table.render(\"#table\"); }); </script> </body></html>" >> ${INDEX_TMP_FILE}
 
   # Create the html language directory if it does not exist
   if [ ! -d /var/www/html/${BUILD_LANG} ]
