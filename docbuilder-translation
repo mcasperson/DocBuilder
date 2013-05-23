@@ -72,15 +72,15 @@ do
 	  CONTENT_SPEC=$(curl --silent http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topic/get/json/${CS_ID})
 	
 	  TITLE=$(echo ${CONTENT_SPEC} | grep -Po '(?<="title":").*?(?=",)')
-	  PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Product\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
-	  VERSION=$(echo ${CONTENT_SPEC} | sed -n "s/^.*Version\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
+	  PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*\\\nProduct\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
+	  VERSION=$(echo ${CONTENT_SPEC} | sed -n "s/^.*\\\nVersion\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. ]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
 	
 	  PRODUCT=${PRODUCT//\'/\\\'}
-    ESCAPED_PRODUCT=${PRODUCT// /_}
-    ESCAPED_PRODUCT=${ESCAPED_PRODUCT//[^A-Za-z0-9_.-]/}
+	  ESCAPED_PRODUCT=${PRODUCT// /_}
+	  ESCAPED_PRODUCT=${ESCAPED_PRODUCT//[^A-Za-z0-9_.-]/}
 	  TITLE=${TITLE//\'/\\\'}
-    ESCAPED_TITLE=${TITLE// /_}
-    ESCAPED_TITLE=${ESCAPED_TITLE//[^A-Za-z0-9_.-]/}
+	  ESCAPED_TITLE=${TITLE// /_}
+	  ESCAPED_TITLE=${ESCAPED_TITLE//[^A-Za-z0-9_.-]/}
 
 	  # Sleep until a core is free for another publican build
 	  PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
@@ -100,7 +100,7 @@ do
 	  done
 	
 	  CS_FILENAME=${DOCBUILDER_DATA_DIR}/${BUILD_LANG}/${CS_ID}
-    #echo $CS_FILENAME
+	  #echo $CS_FILENAME
 	
 	  # Create the data directory if it does not exist
 	  if [ ! -d "${DOCBUILDER_DATA_DIR}/${BUILD_LANG}" ]
