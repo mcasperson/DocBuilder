@@ -9,6 +9,7 @@
 #
 # Although it runs in an infinite loop, the script will only initiate as many concurrent rebuilds as the local PC has CPU cores.
 
+LAST_REBUILD=0
 # The location where info about last build times is stored
 #DOCBUILDER_DATA_DIR=/home/mcaspers/.docbuilder
 DOCBUILDER_DATA_DIR=/root/.docbuilder
@@ -20,6 +21,11 @@ CORE_COUNT=`grep -c ^processor /proc/cpuinfo`
 # The index file that is built up with each loop over the content specs
 INDEX_TMP_FILE=/tmp/index.html
 
+# Print the setup info
+echo "Number of Cores: ${CORE_COUNT}"
+echo "Data Directory: ${DOCBUILDER_DATA_DIR}"
+echo "Build Script: ${BOOK_BUILD_SCRIPT}"
+
 # Perform a check to make sure that the build script is executable
 if [[ ! -x "$BOOK_BUILD_SCRIPT" ]]
 then
@@ -27,9 +33,29 @@ then
     exit 1
 fi
 
+# Load the last rebuild time
+REBUILD_FILE=${DOCBUILDER_DATA_DIR}/last_build
+if [ -f ${REBUILD_FILE} ]
+then
+    	LAST_REBUILD=$(head -n 1 ${REBUILD_FILE})
+fi
+
 # Start the infinite loop
 while "true"
 do
+	NOW=`date +%s`
+        if [ ${LAST_REBUILD} != 0 ]
+        then
+            	DIFF=$((${NOW}-${LAST_REBUILD}))
+                REBUILD_TIME=`echo "$((${DIFF}%3600/60+1)) mins"`
+        else
+            	REBUILD_TIME="Unknown"
+        fi
+
+	# Store the last rebuild timestamp
+        echo ${NOW} > ${REBUILD_FILE}
+        LAST_REBUILD=${NOW}
+
 	# Dump the HTML header boilderplate	
 	echo "<html> <head> <title>Docbuilder Index</title> <link rel=\"stylesheet\" href=\"index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script><script src=\"functions.js\" ></script> </head> <body onload=\"setLangSelectLanguage()\"> <div class=\"container\"><div class=\"langBar\">Language: <select id=\"lang\" class=\"langSelect\" onchange=\"changeLang(this)\">
 <option selected value=\"\"></option>
@@ -40,7 +66,7 @@ do
 <option value=\"pt-BR\">Portuguese</option>
 <option value=\"es\">Spanish</option>
 </select></div>
-<div class=\"content\"><div><img height=\"87\" src=\"pg.png\" width=\"879\"></div><div style=\"margin-top:1em\"><p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p><p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p><p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p><p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in the CCMS.</p><p>To view the latest changes to a document, simply refresh the page.</p></div> <div style=\"margin-top:1em\" class=\"yui3-skin-sam\" id=\"table\"> </div></div></div> <script> YUI().use('datatable', function (Y) { var data = [" > ${INDEX_TMP_FILE}
+<div class=\"content\"><div><img height=\"87\" src=\"pg.png\" width=\"879\"></div><div style=\"margin-top:1em\"><p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p><p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p><p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p><p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in the CCMS.</p><p>To view the latest changes to a document, simply refresh the page.</p><p>Estimated Rebuild Time: ${REBUILD_TIME}</p></div> <div style=\"margin-top:1em\" class=\"yui3-skin-sam\" id=\"table\"> </div></div></div> <script> YUI().use('datatable', function (Y) { var data = [" > ${INDEX_TMP_FILE}
 
 	# Loop over each content spec ID
 	for CS_ID in `curl --silent 'http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topics/get/json/query;tag268=1?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D' | grep -Po '(?<="id":)[0-9]+'` 
