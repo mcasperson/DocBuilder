@@ -58,7 +58,7 @@ do
 
 	# Dump the HTML header boilderplate	
 	echo "<html> <head> <title>Docbuilder Index</title> <link rel=\"stylesheet\" href=\"index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script><script src=\"functions.js\" ></script> </head> <body onload=\"setLangSelectLanguage()\"> <div class=\"container\"><div class=\"langBar\">Language: <select id=\"lang\" class=\"langSelect\" onchange=\"changeLang(this)\">
-<option selected value=\"\"></option>
+<option selected value=\"\">English</option>
 <option value=\"zh-Hans\">Chinese</option>
 <option value=\"fr\">French</option>
 <option value=\"de\">German</option>
@@ -106,47 +106,49 @@ do
 			echo Data directory was not present, and was created.
 			mkdir -p ${DOCBUILDER_DATA_DIR}
 		fi
-		
-		# Check for the last time we recompiled the content spec
-		if [ -f ${CS_FILENAME} ]
-		then
-			echo "Last compile data was found for ${CS_ID}. Checking for changes."
-		
-			LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
-			LAST_COMPILE_ENCODED=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$LAST_COMPILE") 
-			LAST_COMPILE_ENCODED=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$LAST_COMPILE_ENCODED") 			
-			
-			NUMBER_TOPICS=$(curl --silent  "http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topics/get/json/query;startEditDate=${LAST_COMPILE_ENCODED};topicIncludedInSpec=${CS_ID}?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D" | grep -Po '(?<="size":)[0-9]+')
-						
-			SPEC_HAS_CHANGED=$(curl --silent  "http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topics/get/json/query;startEditDate=${LAST_COMPILE_ENCODED};topicIds=${CS_ID}?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D" | grep -Po '(?<="size":)[0-9]+')		
-			
-			#echo ${NUMBER_TOPICS}
-			#echo ${SPEC_HAS_CHANGED}
-			
-			if [[ ${NUMBER_TOPICS} -eq "0" ]] && [[ ${SPEC_HAS_CHANGED} -eq "0" ]]
-			then
-				RECOMPILE=false
-				echo "No changes were found for ${CS_ID}."
-			else
-				date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
-			fi
-		else
-			echo "Last compile data was not found for ${CS_ID} and was set to now."
-		
-			date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
-		fi
-		
+
 		# A sanity check to make sure that we are not skipping content specs that failed to build for some reason
-		if [ ${RECOMPILE} = "false" ]
-		then
-			if [ ! -f /var/www/html/${CS_ID}/index.html ]
+               	if [ ! -f /var/www/html/${CS_ID}/index.html ]
+                then
+			if [ -f ${CS_FILENAME} ]
 			then
-				echo "Last build for ${CS_ID} failed because there is no index.html"
-				RECOMPILE=true
+                       		echo "Last build for ${CS_ID} failed because there is no index.html"
+			else
+				echo "Last compile data was not found for ${CS_ID} and was set to now."
+			fi
+
+			date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
+		else
+			# Check for the last time we recompiled the content spec
+			if [ -f ${CS_FILENAME} ]
+			then
+				echo "Last compile data was found for ${CS_ID}. Checking for changes."
+		
+				LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
+				LAST_COMPILE_ENCODED=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$LAST_COMPILE") 
+				LAST_COMPILE_ENCODED=$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$LAST_COMPILE_ENCODED") 			
+			
+				NUMBER_TOPICS=$(curl --silent  "http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topics/get/json/query;startEditDate=${LAST_COMPILE_ENCODED};topicIncludedInSpec=${CS_ID}?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D" | grep -Po '(?<="size":)[0-9]+')
+					
+				SPEC_HAS_CHANGED=$(curl --silent  "http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topics/get/json/query;startEditDate=${LAST_COMPILE_ENCODED};topicIds=${CS_ID}?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D" | grep -Po '(?<="size":)[0-9]+')		
+			
+				#echo ${NUMBER_TOPICS}
+				#echo ${SPEC_HAS_CHANGED}
+			
+				if [[ ${NUMBER_TOPICS} -eq "0" ]] && [[ ${SPEC_HAS_CHANGED} -eq "0" ]]
+				then
+					RECOMPILE=false
+					echo "No changes were found for ${CS_ID}."
+				else
+					date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
+				fi
+			else
+				echo "Last compile data was not found for ${CS_ID} and was set to now."
+		
 				date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
 			fi
-		fi
-		
+		fi		
+
 		LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 		
 		# Add an entry to the index page
@@ -162,6 +164,8 @@ do
 		
 		#break
 
+		# Add a small sleep to give the server a break
+		sleep 1
 	done
 	
 	# Finish the index page, and copy to the www dir

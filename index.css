@@ -53,7 +53,7 @@ button:active, button.active {
 
 .langSelect {
   border: 1px solid gray;
-  background: #EEE;
+  background-color: #EEE;
   padding: 2px;
   border-radius: 5px;
   -webkit-border-radius: 5px
