@@ -165,7 +165,7 @@ do
 		#break
 
 		# Add a small sleep to give the server a break
-		sleep 1
+		usleep 250000
 	done
 	
 	# Finish the index page, and copy to the www dir
