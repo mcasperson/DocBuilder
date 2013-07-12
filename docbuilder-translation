@@ -154,11 +154,13 @@ done
 PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
 CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
 
-while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge 1 ]
+WAIT_COUNT=0
+while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge 1 ] && [ ${WAIT_COUNT} -le 5 ]
 do
   echo "Waiting for builds to finish"
   sleep 20;
 
   PUBLICAN_COUNT=$(ps -ef | grep -v grep | grep publican | wc -l)
   CSPROCESSOR_COUNT=$(ps -ef | grep -v grep | grep csprocessor.jar | wc -l)
+  WAIT_COUNT=$((${WAIT_COUNT} + 1))
 done
