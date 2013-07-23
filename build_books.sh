@@ -6,7 +6,7 @@ function cleanHTMLDir()
 
 	if [ -d /var/www/html/${CLEAN_DIR} ] || [ -e /var/www/html/${CLEAN_DIR} ]
 	then
-		rm -rf ${CLEAN_DIR}
+		rm -rf /var/www/html/${CLEAN_DIR}
 	fi
 
 }
@@ -22,7 +22,8 @@ function backupAndCleanHTMLDir()
 			rm -rf /var/www/html/backup/${CLEAN_DIR}
 		fi
 
-		cp -r /var/www/html/${CLEAN_DIR} /var/www/html/backup/
+		mkdir -p /var/www/html/backup/${CLEAN_DIR}
+		cp -r /var/www/html/${CLEAN_DIR} /var/www/html/backup/${CLEAN_DIR}
 		rm -rf /var/www/html/${CLEAN_DIR}
 	fi
 
@@ -68,15 +69,15 @@ do
 
 	date > build.log
 
-		echo "csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
-		csprocessor build --lang ${BUILD_LANG} --server --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
+		echo "csprocessor build --lang ${BUILD_LANG} --flatten --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
+		csprocessor build --lang ${BUILD_LANG} --flatten --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
 
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
 		then
 			cleanHTMLDir ${BUILD_LANG}/${CSPID}
 
-			mkdir /var/www/html/${BUILD_LANG}/${CSPID}
+			mkdir -p /var/www/html/${BUILD_LANG}/${CSPID}
 			cp build.log /var/www/html/${BUILD_LANG}/${CSPID}
 
 			continue
@@ -100,17 +101,19 @@ do
 				# If the publican build fails then put the log in the html dir
 				if [ $? != 0 ]
 				then
-					mkdir /var/www/html/${BUILD_LANG}/${CSPID}
+					mkdir -p /var/www/html/${BUILD_LANG}/${CSPID}
 					cp publican.log /var/www/html/${BUILD_LANG}/${CSPID}
 
-					continue
+					# Leave the current directory and continue to the next spec
+					popd
+					break
 				fi
 
 				backupAndCleanHTMLDir ${BUILD_LANG}/${CSPID}
 				mkdir -p /var/www/html/${BUILD_LANG}/${CSPID}
 				
 				cp -R tmp/${PUBLICAN_LANG}/html-single/* /var/www/html/${BUILD_LANG}/${CSPID}
-        cp -R tmp/${PUBLICAN_LANG}/pdf/* /var/www/html/${BUILD_LANG}/${CSPID}
+	 			cp -R tmp/${PUBLICAN_LANG}/pdf/* /var/www/html/${BUILD_LANG}/${CSPID}
 
 				cp publican.log /var/www/html/${BUILD_LANG}/${CSPID}
 			popd
