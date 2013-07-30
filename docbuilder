@@ -11,11 +11,11 @@
 
 LAST_REBUILD=0
 # The location where info about last build times is stored
-DOCBUILDER_DATA_DIR=/home/matthew/.docbuilder
-#DOCBUILDER_DATA_DIR=/root/.docbuilder
+#DOCBUILDER_DATA_DIR=/home/matthew/.docbuilder
+DOCBUILDER_DATA_DIR=/root/.docbuilder
 # The script to call to actually build the books
-BOOK_BUILD_SCRIPT=/home/matthew/git/DocBuilder/build_original_books.sh
-#BOOK_BUILD_SCRIPT=/root/build_original_books.sh
+#BOOK_BUILD_SCRIPT=/home/matthew/git/DocBuilder/build_original_books.sh
+BOOK_BUILD_SCRIPT=/root/build_original_books.sh
 # Get the number of cores
 CORE_COUNT=`grep -c ^processor /proc/cpuinfo`
 # The index file that is built up with each loop over the content specs
@@ -273,7 +273,7 @@ do
 							continue;
 						}
 						
-						if (idFilter != null && idFilter.length != 0 && String(!data[i].idRaw).match(idFilter)) {
+						if (idFilter != null && idFilter.length != 0 && !String(data[i].idRaw).match(idFilter)) {
 							continue;
 						}
 						
