@@ -244,7 +244,7 @@ do
 			${BOOK_BUILD_SCRIPT} ${CS_ID} ${CS_ID} > /dev/null 2>&1 &
 		fi	
 		
-		break
+		#break
 
 		# Add a small sleep to give the server a break
 		sleep .25
