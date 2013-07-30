@@ -244,6 +244,7 @@ do
 			${BOOK_BUILD_SCRIPT} ${CS_ID} ${CS_ID} > /dev/null 2>&1 &
 		fi	
 		
+		# Break here to process only 1 content spec. This is useful when testing code changes.
 		#break
 
 		# Add a small sleep to give the server a break
