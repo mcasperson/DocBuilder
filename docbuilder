@@ -273,7 +273,7 @@ do
 							continue;
 						}
 						
-						if (idFilter != null && idFilter.length != 0 && !data[i].idRaw.match(idFilter)) {
+						if (idFilter != null && idFilter.length != 0 && String(!data[i].idRaw).match(idFilter)) {
 							continue;
 						}
 						
