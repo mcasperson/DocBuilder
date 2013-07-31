@@ -48,16 +48,78 @@ do
   echo "Starting to build ${BUILD_LANG} books."
 
 	# Dump the HTML header boilderplate	
-	echo "<html> <head> <title>Docbuilder ${BUILD_LANG} Index</title> <link rel=\"stylesheet\" href=\"../index.css\"/> <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script><script src=\"../functions.js\" ></script> </head> <body onload=\"setLangSelectLanguage()\"> <div class=\"container\"><div class=\"langBar\">Language: <select id=\"lang\" class=\"langSelect\" onchange=\"changeLang(this)\">
-<option selected value=\"\">English</option>
-<option value=\"zh-Hans\">Chinese</option>
-<option value=\"fr\">French</option>
-<option value=\"de\">German</option>
-<option value=\"ja\">Japanese</option>
-<option value=\"pt-BR\">Portuguese</option>
-<option value=\"es\">Spanish</option>
-</select></div>
-<div class=\"content\"><div><img height=\"87\" src=\"../pg.png\" width=\"879\"></div><div style=\"margin-top:1em\"><p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p><p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p><p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p><p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in Zanata.</p><p>To view the latest changes to a document, simply refresh the page.</p></div> <div style=\"margin-top:1em\" class=\"yui3-skin-sam\" id=\"table\"> </div></div></div> <script> YUI().use('datatable', function (Y) { var data = [" > ${INDEX_TMP_FILE}
+	echo "<html>
+    <head>
+        <title>Docbuilder ${BUILD_LANG} Index</title>
+        <link rel=\"stylesheet\" href=\"../index.css\"/>
+        <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script>
+        <script src=\"../functions.js\" ></script>
+    </head>
+    <body onload=\"setLangSelectLanguage()\">
+        <div class=\"container\">
+            <div class=\"langBar\">Language:
+                <select id=\"lang\" class=\"langSelect\" onchange=\"changeLang(this)\">
+                    <option selected value=\"\">English</option>
+                    <option value=\"zh-Hans\">Chinese</option>
+                    <option value=\"fr\">French</option>
+                    <option value=\"de\">German</option>
+                    <option value=\"ja\">Japanese</option>
+                    <option value=\"pt-BR\">Portuguese</option>
+                    <option value=\"es\">Spanish</option>
+                </select>
+            </div>
+            <div class=\"content\">
+                <div>
+                    <img height=\"87\" src=\"../pg.png\" width=\"879\">
+                </div>
+                <div style=\"margin-top:1em\">
+                    <p>DocBuilder is a service that automatically rebuilds content specifications as they are created or edited.</p>
+                    <p>Each content spec has three links: a link to the compiled book itself, a link to the build log, and a link to the publican log.</p>
+                    <p>If a book could not be built, first check the build log. This log contains information that may indicate syntax errors in the content specification. You can also view this log to see when the document was last built.</p>
+                    <p>If the build log has no errors, check the publican log. This may indicate some syntax errors in the XML.</p><p>The topics in each document include a \"Edit this topic\" link, which will take you to the topic in Zanata.</p>
+                    <p>To view the latest changes to a document, simply refresh the page.</p>
+                </div>
+                <div></div>
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                                ID Filter
+                            </td>
+                            <td>
+                                <input type=\"text\" id=\"idFilter\" onkeyup=\"save_filter()\">
+                            </td>
+                            <td>
+                                Product Filter
+                            </td>
+                            <td>
+                                <input type=\"text\" id=\"productFilter\" onkeyup=\"save_filter()\">
+                            </td>
+                            <td rowspan=\"2\">
+                                <button onclick=\"reset_filter()\">Reset</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Version Filter
+                            </td>
+                            <td>
+                                <input type=\"text\" id=\"versionFilter\" onkeyup=\"save_filter()\">
+                            </td>
+                            <td>
+                                Title Filter
+                            </td>
+                            <td>
+                                <input type=\"text\" id=\"titleFilter\" onkeyup=\"save_filter()\">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div></div>
+            </div>
+        </div>
+        <script>
+            var data = [" > ${INDEX_TMP_FILE}
 
   # Read in each line of the build language file to get the Content Spec IDs to build
   while read CS_ID
@@ -136,7 +198,54 @@ do
   done < $BUILD_LANG_FILE
 	
   # Finish the index page, and copy to the www dir
-  echo " ]; var table = new Y.DataTable({ columns: [ {key: \"id\", label: \"ID\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('idRaw'), second   = b.get('idRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"product\", label: \"Product\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('productRaw'), second   = b.get('productRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"version\", label: \"Version\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('versionRaw'), second   = b.get('versionRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"title\", label: \"Title\", allowHTML: true, sortFn: function (a, b, desc) {var first   = a.get('titleRaw'), second   = b.get('titleRaw'), order = (first == second) ? 0 : (first > second) ? 1 : -1; return desc ? -order : order;}}, {key: \"pdfLink\", label: \"PDF Link\", allowHTML: true}, {key: \"buildlog\", label: \"Build Log\", allowHTML: true}, {key: \"publicanlog\", label: \"Publican Log\", allowHTML: true} ], sortable: [\"id\", \"product\", \"title\", \"version\"], data: data }); table.render(\"#table\"); }); </script> </body></html>" >> ${INDEX_TMP_FILE}
+  echo " ];
+            rebuildTimeout = null;
+
+            productFilter.value = localStorage[\"productFilter\"] || \"\";
+            titleFilter.value = localStorage[\"titleFilter\"] || \"\";
+            versionFilter.value = localStorage[\"versionFilter\"] || \"\";
+            idFilter.value = localStorage[\"idFilter\"] || \"\";
+
+            save_filter = function() {
+                localStorage[\"productFilter\"] = productFilter.value;
+                localStorage[\"titleFilter\"] = titleFilter.value;
+                localStorage[\"versionFilter\"] = versionFilter.value;
+                localStorage[\"idFilter\"] = idFilter.value;
+
+                if (rebuildTimeout) {
+                    window.clearTimeout(rebuildTimeout);
+                    rebuildTimeout = null;
+                }
+
+                rebuildTimeout = setTimeout(function(){
+                    build_table_with_pdfs(data);
+                    rebuildTimeout = null;
+                    },1000);
+            }
+
+            reset_filter = function() {
+                localStorage[\"productFilter\"] = \"\";
+                localStorage[\"titleFilter\"] = \"\";
+                localStorage[\"versionFilter\"] = \"\";
+                localStorage[\"idFilter\"] = \"\";
+
+                productFilter.value = \"\";
+                titleFilter.value = \"\";
+                versionFilter.value = \"\";
+                idFilter.value = \"\";
+
+                if (rebuildTimeout) {
+                    window.clearTimeout(rebuildTimeout);
+                    rebuildTimeout = null;
+                }
+
+                build_table_with_pdfs(data);
+            }
+
+            build_table_with_pdfs(data)
+        </script>
+    </body>
+</html>" >> ${INDEX_TMP_FILE}
 
   # Create the html language directory if it does not exist
   if [ ! -d /var/www/html/${BUILD_LANG} ]
