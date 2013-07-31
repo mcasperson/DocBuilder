@@ -30,12 +30,12 @@ fi
 
 while (( "$#" ))
 do
-        # Extract the language and CSP id from the
-        # command line argument
-        CSPID=$1
+	# Extract the language and CSP id from the
+	# command line argument
+	CSPID=$1
 
-        # Shift the arguments down
-        shift
+	# Shift the arguments down
+	shift
 
 	# Start with a clean temp dir for every build
 	if [ -d ${TMP_DIR}${DIR_SUFFIX} ]
@@ -48,6 +48,7 @@ do
 	# Enter the temp directory
 	pushd ${TMP_DIR}${DIR_SUFFIX}
 
+		# Build the book as HTML-SINGLE with no overrides
 		date > build.log
 
 		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log"
@@ -57,52 +58,118 @@ do
 		if [ $? != 0 ]
 		then
 			if [ -d /var/www/html/${CSPID} ]
-                        then
-	                        rm -rf /var/www/html/${CSPID}
-                        fi
+			then
+				rm -rf /var/www/html/${CSPID}
+			fi
 
 			mkdir /var/www/html/${CSPID}
 			cp build.log /var/www/html/${CSPID}
 
-			continue
+		else
+			unzip ${BOOKNAME}.zip
+
+			# The zip file will be extracted to a directory name that 
+			# refelcts the name of the book. We don't know this name,
+			# but we can loop over the subdirectories and then break
+			# once we have processed the first directory.
+			for dir in ./*/
+			do
+	
+				# Enter the extracted book directory
+				pushd ${dir}
+	
+					echo 'publican build --formats=html-single --langs=en-US &> publican.log'
+	
+					publican build --formats=html-single --langs=en-US &> publican.log
+	
+					if [ -d /var/www/html/${CSPID} ] || [ -e /var/www/html/${CSPID} ]
+					then
+						rm -rf /var/www/html/${CSPID}
+					fi
+	
+					mkdir /var/www/html/${CSPID}
+					cp -R tmp/en-US/html-single/. /var/www/html/${CSPID}
+	
+					cp publican.log /var/www/html/${CSPID}
+	
+				popd
+				
+				# we only want to process one directory
+				break
+	
+			done
+	
+			cp build.log /var/www/html/${CSPID}
 		fi		
 
-		unzip ${BOOKNAME}.zip
+	popd	
 
-		# The zip file will be extracted to a directory name that 
-		# refelcts the name of the book. We don't know this name,
-		# but we can loop over the subdirectories and then break
-		# once we have processed the first directory.
-		for dir in ./*/
-		do
+	# Start with a clean temp dir for every build
+	if [ -d ${TMP_DIR}${DIR_SUFFIX} ]
+	then
+		rm -rf ${TMP_DIR}${DIR_SUFFIX}
+	fi
+	
+	mkdir ${TMP_DIR}${DIR_SUFFIX}
 
-			# Enter the extracted book directory
-			pushd ${dir}
+	# Enter the temp directory
+	pushd ${TMP_DIR}${DIR_SUFFIX}	
+	
+		# Build the book as HTML overriding the brand
+		date > build.log
 
-				echo 'publican build --formats=html-single --langs=en-US &> publican.log'
+		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites ${CSPID} >> build.log"
+		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites ${CSPID} >> build.log
+		
+		# If the csp build failed then continue to the next item
+		if [ $? != 0 ]
+		then
+			if [ -d /var/www/html/${CSPID}/html ]
+			then
+				rm -rf /var/www/html/${CSPID}/html
+			fi
 
-				publican build --formats=html-single --langs=en-US &> publican.log
+			mkdir /var/www/html/${CSPID}/html
+			cp build.log /var/www/html/${CSPID}/html
 
-				if [ -d /var/www/html/${CSPID} ] || [ -e /var/www/html/${CSPID} ]
-				then
-					rm -rf /var/www/html/${CSPID}
-				fi
+		else
+			unzip ${BOOKNAME}.zip
 
-				mkdir /var/www/html/${CSPID}
-				cp -R tmp/en-US/html-single/. /var/www/html/${CSPID}
+			# The zip file will be extracted to a directory name that 
+			# refelcts the name of the book. We don't know this name,
+			# but we can loop over the subdirectories and then break
+			# once we have processed the first directory.
+			for dir in ./*/
+			do
+	
+				# Enter the extracted book directory
+				pushd ${dir}
+	
+					echo 'publican build --formats=html --langs=en-US &> publican.log'
+	
+					publican build --formats=html --langs=en-US &> publican.log
+	
+					if [ -d /var/www/html/${CSPID}/html ] || [ -e /var/www/html/${CSPID}/html ]
+					then
+						rm -rf /var/www/html/${CSPID}/html
+					fi
+	
+					mkdir -p /var/www/html/${CSPID}/html
+					cp -R tmp/en-US/html/. /var/www/html/${CSPID}/html
+	
+					cp publican.log /var/www/html/${CSPID}/html
+	
+				popd
+				
+				# we only want to process one directory
+				break
+	
+			done
+	
+			cp build.log /var/www/html/${CSPID}/html
+		fi		
 
-				cp publican.log /var/www/html/${CSPID}
-
-			popd
-			
-			# we only want to process one directory
-			break
-
-		done
-
-		cp build.log /var/www/html/${CSPID}
-
-	popd
+	popd		
 done
 
 # remove the lock file

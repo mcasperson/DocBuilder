@@ -1,0 +1,171 @@
+ERROR: Invalid Argument! Error Message: Unknown option: --flatten
+
+Usage: csprocessor [options] [command] [command options]
+  Options:
+   --config <FILE>            
+   --help                     
+   --host, -H <URL>           
+   --username, -u <USERNAME>  
+   --version                  
+  Commands:
+    build      Build a Content Specification from the server
+      Usage: build [options] [ID] or [FILE]       
+        Options:
+         --draft, -d                          Build the book as a draft.
+         --editor-links                       Insert Editor links for each topic.
+         --fetch-pubsnum                      Fetch the pubsnumber directly from brew.
+         --flatten-topics                     Flatten the topics folder when building.
+         --hide-bug-links                     Hide the bug reporting links in the output.
+         --hide-errors                        Hide the errors in the output.
+         --hide-injections                    Stop injections from being processed when building.
+         --injection-types [arg1[,arg2,...]]  Specify certain topic types that injection should be processed on.
+         --lang <LOCALE>                      What locale to build the content spec for.
+         --output, -o <FILE>                  Save the output to the specified file/directory.
+         --override <variable>=<value>        
+         --permissive, -p                     Turn on permissive processing.
+         --rev-message                        Add a message for the revision history.
+         --revision, -r                       
+         --show-contentspec                   Show the content spec page in the output.
+         --show-remarks                       Build the book with remarks visible.
+         --show-report                        Show the Report chapter in the output.
+         --yes, -y                            Automatically answer "yes" to any questions.
+         --zanata-project                     The zanata project name to be associated with the Content Specification.
+         --zanata-server                      The zanata server to be associated with the Content Specification.
+         --zanata-version                     The zanata project version to be associated with the Content Specification.
+
+
+CSProcessor client version: 0.33.6
+Loading configuration from /home/matthew/.config/csprocessor.ini
+Connecting to PressGang server: http://skynet.usersys.redhat.com:8080/pressgang-ccms/rest
+
+Starting to parse...
+Starting first validation pass...
+Attempting to download all the latest topics...
+Starting second validation pass...
+INFO:  The Content Specification is valid.
+
+Starting to build...
+Doing en-US Populate Database Pass
+Doing Fixed URL Pass
+Doing en-US First topic pass
+	Processing 172 Topics
+	First topic Pass 5% Done
+	First topic Pass 10% Done
+	First topic Pass 15% Done
+	First topic Pass 20% Done
+	First topic Pass 25% Done
+	First topic Pass 30% Done
+	First topic Pass 35% Done
+	First topic Pass 40% Done
+	First topic Pass 45% Done
+	First topic Pass 50% Done
+	First topic Pass 55% Done
+	First topic Pass 60% Done
+	First topic Pass 65% Done
+	First topic Pass 70% Done
+	First topic Pass 75% Done
+	First topic Pass 80% Done
+	First topic Pass 85% Done
+	First topic Pass 90% Done
+	First topic Pass 95% Done
+	First topic Pass 100% Done
+Doing en-US Topic Link Pass
+Doing en-US Spec Topic Pass
+	Processing 174 Spec Topics
+	Processing Pass 5% Done
+	Processing Pass 10% Done
+	Processing Pass 15% Done
+	Processing Pass 20% Done
+	Processing Pass 25% Done
+	Processing Pass 30% Done
+	Processing Pass 35% Done
+	Processing Pass 40% Done
+	Processing Pass 45% Done
+	Processing Pass 50% Done
+	Processing Pass 55% Done
+	Processing Pass 60% Done
+	Processing Pass 65% Done
+	Processing Pass 70% Done
+	Processing Pass 75% Done
+	Processing Pass 80% Done
+	Processing Pass 85% Done
+	Processing Pass 90% Done
+	Processing Pass 95% Done
+	Processing Pass 100% Done
+Building the ZIP file
+	Building Level and Topic XML Files
+	Building Error Chapter
+	Building Report Chapter
+	Adding standard files to ZIP file
+	Building Author_Group.xml
+	Building Revision_History.xml
+Content Specification successfully built with 0 Errors and 6 Warnings
+Output saved to: /home/matthew/git/DocBuilder/Book.zip
+
+CSProcessor client version: 0.33.6
+Loading configuration from /home/matthew/.config/csprocessor.ini
+Connecting to PressGang server: http://skynet.usersys.redhat.com:8080/pressgang-ccms/rest
+
+Starting to parse...
+Starting first validation pass...
+Attempting to download all the latest topics...
+Starting second validation pass...
+INFO:  The Content Specification is valid.
+
+Starting to build...
+Doing en-US Populate Database Pass
+Doing Fixed URL Pass
+Doing en-US First topic pass
+	Processing 172 Topics
+	First topic Pass 5% Done
+	First topic Pass 10% Done
+	First topic Pass 15% Done
+	First topic Pass 20% Done
+	First topic Pass 25% Done
+	First topic Pass 30% Done
+	First topic Pass 35% Done
+	First topic Pass 40% Done
+	First topic Pass 45% Done
+	First topic Pass 50% Done
+	First topic Pass 55% Done
+	First topic Pass 60% Done
+	First topic Pass 65% Done
+	First topic Pass 70% Done
+	First topic Pass 75% Done
+	First topic Pass 80% Done
+	First topic Pass 85% Done
+	First topic Pass 90% Done
+	First topic Pass 95% Done
+	First topic Pass 100% Done
+Doing en-US Topic Link Pass
+Doing en-US Spec Topic Pass
+	Processing 174 Spec Topics
+	Processing Pass 5% Done
+	Processing Pass 10% Done
+	Processing Pass 15% Done
+	Processing Pass 20% Done
+	Processing Pass 25% Done
+	Processing Pass 30% Done
+	Processing Pass 35% Done
+	Processing Pass 40% Done
+	Processing Pass 45% Done
+	Processing Pass 50% Done
+	Processing Pass 55% Done
+	Processing Pass 60% Done
+	Processing Pass 65% Done
+	Processing Pass 70% Done
+	Processing Pass 75% Done
+	Processing Pass 80% Done
+	Processing Pass 85% Done
+	Processing Pass 90% Done
+	Processing Pass 95% Done
+	Processing Pass 100% Done
+Building the ZIP file
+	Building Level and Topic XML Files
+	Building Error Chapter
+	Building Report Chapter
+	Adding standard files to ZIP file
+	Building Author_Group.xml
+	Building Revision_History.xml
+Content Specification successfully built with 0 Errors and 6 Warnings
+Book.zip already exists! Overwrite existing file (y/n)? 
