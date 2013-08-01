@@ -184,19 +184,19 @@ function abstract_build_table(data, columns, sortableColumns) {
     var idFilter = localStorage["idFilter"];
 
     for (var i = 0, count = data.length; i < count; ++i) {
-        if (productFilter != null && productFilter.length != 0 && !data[i].productRaw.match(productFilter)) {
+        if (productFilter != null && productFilter.length != 0 && !data[i].productRaw.toLowerCase().match(productFilter.toLowerCase())) {
             continue;
         }
 
-        if (titleFilter != null && titleFilter.length != 0 && !data[i].titleRaw.match(titleFilter)) {
+        if (titleFilter != null && titleFilter.length != 0 && !data[i].titleRaw.toLowerCase().match(titleFilter.toLowerCase())) {
             continue;
         }
 
-        if (versionFilter != null && versionFilter.length != 0 && !data[i].versionRaw.match(versionFilter)) {
+        if (versionFilter != null && versionFilter.length != 0 && !data[i].versionRaw.toLowerCase().match(versionFilter.toLowerCase())) {
             continue;
         }
 
-        if (idFilter != null && idFilter.length != 0 && !String(data[i].idRaw).match(idFilter)) {
+        if (idFilter != null && idFilter.length != 0 && !String(data[i].idRaw).toLowerCase().match(idFilter.toLowerCase())) {
             continue;
         }
 

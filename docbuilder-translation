@@ -53,7 +53,7 @@ do
         <title>Docbuilder ${BUILD_LANG} Index</title>
         <link rel=\"stylesheet\" href=\"../index.css\"/>
         <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script>
-        <script src=\"../functions.js\" ></script>
+        <script src=\"../functions-1.0.js\" ></script>
     </head>
     <body onload=\"setLangSelectLanguage()\">
         <div class=\"container\">
@@ -131,7 +131,7 @@ do
     fi
 
     #echo ${CS_ID}
-	  CONTENT_SPEC=$(curl --silent http://skynet.usersys.redhat.com:8080/TopicIndex/seam/resource/rest/1/topic/get/json/${CS_ID})
+	  CONTENT_SPEC=$(curl --silent http://skynet.usersys.redhat.com:8080/pressgang-ccms/rest/1/topic/get/json/${CS_ID})
 	
 	  TITLE=$(echo ${CONTENT_SPEC} | grep -Po '(?<="title":").*?(?=",)')
 	  PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*\\\nProduct\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. -]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
