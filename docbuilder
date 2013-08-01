@@ -224,7 +224,7 @@ do
 			target=\"_top\">${VERSION}</a>', 
 			productRaw: '${PRODUCT}', 
 			product: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${PRODUCT}</a>', 
-			titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', remarks: '<a href=\"${CS_ID}/remarks\"><button>Build Log</button></a>', 
+			titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', remarks: '<a href=\"${CS_ID}/remarks\"><button>With Remarks</button></a>', 
 			buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , 
 			publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', 
 			lastcompile: '${LAST_COMPILE}'
