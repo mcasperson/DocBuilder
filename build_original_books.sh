@@ -102,6 +102,73 @@ do
 			cp build.log /var/www/html/${CSPID}
 		fi		
 
+	popd
+
+# Start with a clean temp dir for every build
+	if [ -d ${TMP_DIR}${DIR_SUFFIX} ]
+	then
+		rm -rf ${TMP_DIR}${DIR_SUFFIX}
+	fi
+	
+	mkdir ${TMP_DIR}${DIR_SUFFIX}
+
+	# Enter the temp directory
+	pushd ${TMP_DIR}${DIR_SUFFIX}
+
+		# Build the book as HTML-SINGLE with no overrides
+		date > build.log
+
+		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log"
+		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log
+		
+		# If the csp build failed then continue to the next item
+		if [ $? != 0 ]
+		then
+			if [ -d /var/www/html/${CSPID} ]
+			then
+				rm -rf /var/www/html/${CSPID}
+			fi
+
+			mkdir /var/www/html/${CSPID}
+			cp build.log /var/www/html/${CSPID}
+
+		else
+			unzip ${BOOKNAME}.zip
+
+			# The zip file will be extracted to a directory name that 
+			# refelcts the name of the book. We don't know this name,
+			# but we can loop over the subdirectories and then break
+			# once we have processed the first directory.
+			for dir in ./*/
+			do
+	
+				# Enter the extracted book directory
+				pushd ${dir}
+	
+					echo 'publican build --formats=html-single --langs=en-US &> publican.log'
+	
+					publican build --formats=html-single --langs=en-US &> publican.log
+	
+					if [ -d /var/www/html/${CSPID} ] || [ -e /var/www/html/${CSPID} ]
+					then
+						rm -rf /var/www/html/${CSPID}
+					fi
+	
+					mkdir /var/www/html/${CSPID}
+					cp -R tmp/en-US/html-single/. /var/www/html/${CSPID}
+	
+					cp publican.log /var/www/html/${CSPID}
+	
+				popd
+				
+				# we only want to process one directory
+				break
+	
+			done
+	
+			cp build.log /var/www/html/${CSPID}
+		fi		
+
 	popd	
 
 	# Start with a clean temp dir for every build
@@ -115,22 +182,22 @@ do
 	# Enter the temp directory
 	pushd ${TMP_DIR}${DIR_SUFFIX}	
 	
-		# Build the book as HTML overriding the brand
+		# Build the book with remarks enabled
 		date > build.log
 
-		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites --publican.cfg-override chunk_first=1 ${CSPID} >> build.log"
-		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites --publican.cfg-override chunk_first=1 ${CSPID} >> build.log
+		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip --publican.cfg-override show_remarks=1 ${CSPID} >> build.log"
+		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip --publican.cfg-override show_remarks=1 ${CSPID} >> build.log
 		
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
 		then
-			if [ -d /var/www/html/${CSPID}/html ]
+			if [ -d /var/www/html/${CSPID}/remarks ]
 			then
-				rm -rf /var/www/html/${CSPID}/html
+				rm -rf /var/www/html/${CSPID}/remarks
 			fi
 
-			mkdir /var/www/html/${CSPID}/html
-			cp build.log /var/www/html/${CSPID}/html
+			mkdir /var/www/html/${CSPID}/remarks
+			cp build.log /var/www/html/${CSPID}/remarks
 
 		else
 			unzip ${BOOKNAME}.zip
@@ -147,17 +214,17 @@ do
 	
 					echo 'publican build --formats=html --langs=en-US &> publican.log'
 	
-					publican build --formats=html --langs=en-US &> publican.log
+					publican build --formats=html-single --langs=en-US &> publican.log
 	
-					if [ -d /var/www/html/${CSPID}/html ] || [ -e /var/www/html/${CSPID}/html ]
+					if [ -d /var/www/html/${CSPID}/remarks ] || [ -e /var/www/html/${CSPID}/remarks ]
 					then
-						rm -rf /var/www/html/${CSPID}/html
+						rm -rf /var/www/html/${CSPID}/remarks
 					fi
 	
-					mkdir -p /var/www/html/${CSPID}/html
-					cp -R tmp/en-US/html/. /var/www/html/${CSPID}/html
+					mkdir -p /var/www/html/${CSPID}/remarks
+					cp -R tmp/en-US/html-single/. /var/www/html/${CSPID}/remarks
 	
-					cp publican.log /var/www/html/${CSPID}/html
+					cp publican.log /var/www/html/${CSPID}/remarks
 	
 				popd
 				
@@ -166,7 +233,7 @@ do
 	
 			done
 	
-			cp build.log /var/www/html/${CSPID}/html
+			cp build.log /var/www/html/${CSPID}/remarks
 		fi		
 
 	popd		
