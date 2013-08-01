@@ -220,8 +220,7 @@ do
 			idRaw: ${CS_ID}, 
 			id: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${CS_ID}</a>', 
 			versionRaw: '${VERSION}', 
-			version: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  
-			target=\"_top\">${VERSION}</a>', 
+			version: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${VERSION}</a>', 
 			productRaw: '${PRODUCT}', 
 			product: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${PRODUCT}</a>', 
 			titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', remarks: '<a href=\"${CS_ID}/remarks\"><button>With Remarks</button></a>', 
