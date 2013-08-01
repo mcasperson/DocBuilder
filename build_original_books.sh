@@ -118,8 +118,8 @@ do
 		# Build the book as HTML overriding the brand
 		date > build.log
 
-		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites ${CSPID} >> build.log"
-		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites ${CSPID} >> build.log
+		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites --publican.cfg-override chunk_first=1 ${CSPID} >> build.log"
+		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites --publican.cfg-override chunk_first=1 ${CSPID} >> build.log
 		
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
