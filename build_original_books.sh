@@ -104,7 +104,7 @@ do
 
 	popd
 
-# Start with a clean temp dir for every build
+	# Start with a clean temp dir for every build
 	if [ -d ${TMP_DIR}${DIR_SUFFIX}html ]
 	then
 		rm -rf ${TMP_DIR}${DIR_SUFFIX}html
