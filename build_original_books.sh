@@ -115,22 +115,22 @@ do
 	# Enter the temp directory
 	pushd ${TMP_DIR}${DIR_SUFFIX}html
 
-		# Build the book as HTML-SINGLE with no overrides
+		# Build the book as HTML
 		date > build.log
 
-		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log"
-		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log
+   echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites --publican.cfg-override chunk_first=1 ${CSPID} >> build.log"
+   csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip --override brand=PressGang-Websites --publican.cfg-override chunk_first=1 ${CSPID} >> build.log
 		
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
 		then
-			if [ -d /var/www/html/${CSPID} ]
+			if [ -d /var/www/html/${CSPID}/html ]
 			then
-				rm -rf /var/www/html/${CSPID}
+				rm -rf /var/www/html/${CSPID}/html
 			fi
 
-			mkdir /var/www/html/${CSPID}
-			cp build.log /var/www/html/${CSPID}
+			mkdir /var/www/html/${CSPID}/html
+			cp build.log /var/www/html/${CSPID}/html
 
 		else
 			unzip ${BOOKNAME}.zip
@@ -145,19 +145,19 @@ do
 				# Enter the extracted book directory
 				pushd ${dir}
 	
-					echo 'publican build --formats=html-single --langs=en-US &> publican.log'
+					echo 'publican build --formats=html --langs=en-US &> publican.log'
 	
-					publican build --formats=html-single --langs=en-US &> publican.log
+					publican build --formats=html --langs=en-US &> publican.log
 	
-					if [ -d /var/www/html/${CSPID} ] || [ -e /var/www/html/${CSPID} ]
+					if [ -d /var/www/html/${CSPID}/html ] || [ -e /var/www/html/${CSPID}/html ]
 					then
-						rm -rf /var/www/html/${CSPID}
+						rm -rf /var/www/html/${CSPID}/html
 					fi
 	
-					mkdir /var/www/html/${CSPID}
-					cp -R tmp/en-US/html-single/. /var/www/html/${CSPID}
+					mkdir /var/www/html/${CSPID}/html
+					cp -R tmp/en-US/html/. /var/www/html/${CSPID}/html
 	
-					cp publican.log /var/www/html/${CSPID}
+					cp publican.log /var/www/html/${CSPID}/html
 	
 				popd
 				
@@ -166,7 +166,7 @@ do
 	
 			done
 	
-			cp build.log /var/www/html/${CSPID}
+			cp build.log /var/www/html/${CSPID}/html
 		fi		
 
 	popd	
