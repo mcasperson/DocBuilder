@@ -62,7 +62,7 @@ do
         <title>Docbuilder Index</title>
         <link rel=\"stylesheet\" href=\"index.css\"/>
         <script src=\"http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js\"></script>
-        <script src=\"functions-1.0.js\" ></script>
+        <script src=\"functions-1.1.js\" ></script>
     </head>
     <body onload=\"setLangSelectLanguage()\">
         <div class=\"container\">
@@ -216,7 +216,19 @@ do
 		LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 
 		# Add an entry to the index page
-		echo "{ idRaw: ${CS_ID}, id: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${CS_ID}</a>', versionRaw: '${VERSION}', version: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${VERSION}</a>', productRaw: '${PRODUCT}', product: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${PRODUCT}</a>', titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', lastcompile: '${LAST_COMPILE}'}," >> ${INDEX_TMP_FILE}
+		echo "{ 
+			idRaw: ${CS_ID}, 
+			id: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${CS_ID}</a>', 
+			versionRaw: '${VERSION}', 
+			version: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  
+			target=\"_top\">${VERSION}</a>', 
+			productRaw: '${PRODUCT}', 
+			product: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${PRODUCT}</a>', 
+			titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', remarks: '<a href=\"${CS_ID}/remarks\"><button>Build Log</button></a>', 
+			buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , 
+			publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', 
+			lastcompile: '${LAST_COMPILE}'
+		}," >> ${INDEX_TMP_FILE}
 		
 		# Build the book
 		if [ ${RECOMPILE} = "true" ]
