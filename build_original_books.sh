@@ -105,15 +105,15 @@ do
 	popd
 
 # Start with a clean temp dir for every build
-	if [ -d ${TMP_DIR}${DIR_SUFFIX} ]
+	if [ -d ${TMP_DIR}${DIR_SUFFIX}html ]
 	then
-		rm -rf ${TMP_DIR}${DIR_SUFFIX}
+		rm -rf ${TMP_DIR}${DIR_SUFFIX}html
 	fi
 	
-	mkdir ${TMP_DIR}${DIR_SUFFIX}
+	mkdir ${TMP_DIR}${DIR_SUFFIX}html
 
 	# Enter the temp directory
-	pushd ${TMP_DIR}${DIR_SUFFIX}
+	pushd ${TMP_DIR}${DIR_SUFFIX}html
 
 		# Build the book as HTML-SINGLE with no overrides
 		date > build.log
@@ -172,15 +172,15 @@ do
 	popd	
 
 	# Start with a clean temp dir for every build
-	if [ -d ${TMP_DIR}${DIR_SUFFIX} ]
+	if [ -d ${TMP_DIR}${DIR_SUFFIX}remarks ]
 	then
-		rm -rf ${TMP_DIR}${DIR_SUFFIX}
+		rm -rf ${TMP_DIR}${DIR_SUFFIX}remarks
 	fi
 	
-	mkdir ${TMP_DIR}${DIR_SUFFIX}
+	mkdir ${TMP_DIR}${DIR_SUFFIX}remarks
 
 	# Enter the temp directory
-	pushd ${TMP_DIR}${DIR_SUFFIX}	
+	pushd ${TMP_DIR}${DIR_SUFFIX}remarks	
 	
 		# Build the book with remarks enabled
 		date > build.log
@@ -212,7 +212,7 @@ do
 				# Enter the extracted book directory
 				pushd ${dir}
 	
-					echo 'publican build --formats=html --langs=en-US &> publican.log'
+					echo 'publican build --formats=html-single --langs=en-US &> publican.log'
 	
 					publican build --formats=html-single --langs=en-US &> publican.log
 	
