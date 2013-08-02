@@ -108,7 +108,7 @@ do
 
 	popd
 	
-	# don't both with the html or remark if the html-single failed
+	# don't bother with the html or remark if the html-single failed
 	if [ PUBLICAN_STATUS == 0 && CSP_STATUS == 0 ]
 	then
 
