@@ -109,7 +109,7 @@ do
 	popd
 	
 	# don't bother with the html or remark if the html-single failed
-	if [ $PUBLICAN_STATUS == 0 && $CSP_STATUS == 0 ]
+	if [ $PUBLICAN_STATUS == 0 ] && [ $CSP_STATUS == 0 ]
 	then
 
 		# Start with a clean temp dir for every build
