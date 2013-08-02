@@ -16,13 +16,16 @@ DOCBUILDER_DATA_DIR=/root/.docbuilder
 # The script to call to actually build the books
 #BOOK_BUILD_SCRIPT=/home/matthew/git/DocBuilder/build_original_books.sh
 BOOK_BUILD_SCRIPT=/root/build_original_books.sh
-# Get the number of cores
+# Get the number of cores. This is used as a base line for how many processes should be running
 CORE_COUNT=`grep -c ^processor /proc/cpuinfo`
+# Max processes
+MAX_PROCESSES=$((CORE_COUNT*2))
 # The index file that is built up with each loop over the content specs
 INDEX_TMP_FILE=/tmp/index.html
 
 # Print the setup info
 echo "Number of Cores: ${CORE_COUNT}"
+echo "Max Processes: ${MAX_PROCESSES}"
 echo "Data Directory: ${DOCBUILDER_DATA_DIR}"
 echo "Build Script: ${BOOK_BUILD_SCRIPT}"
 
@@ -150,7 +153,7 @@ do
 		echo ${PUBLICAN_COUNT} instances of publican running.
 		echo ${CSPROCESSOR_COUNT} instances of csprocessor running. 
 		
-		while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge ${CORE_COUNT} ]
+		while [ $((${PUBLICAN_COUNT} + ${CSPROCESSOR_COUNT})) -ge ${MAX_PROCESSES} ]
 		do
 			echo Sleeping until publican and csprocessor finish
 			sleep 10;
