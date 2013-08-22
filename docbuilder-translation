@@ -9,13 +9,13 @@
 # The script will only initiate as many concurrent rebuilds as the local PC has CPU cores.
 
 # The location where info about last build times is stored
-DOCBUILDER_DATA_DIR=/root/.docbuilder
+DOCBUILDER_DATA_DIR=/home/pressgang/.docbuilder
 # The script to call to actually build the books
-BOOK_BUILD_SCRIPT=/root/build_books.sh
+BOOK_BUILD_SCRIPT=/home/pressgang/DocBuilder/build_books.sh
 # The index file that is built up with each locale
 INDEX_TMP_FILE=/tmp/index-translation.html
 # Locale build information directory
-LANG_DATA_DIR=/root/translations/
+LANG_DATA_DIR=/home/pressgang/translations/
 # Languages to build in
 LANGS=("ja=ja-JP" "fr=fr-FR" "pt-BR=pt-BR" "de=de-DE" "es=es-ES" "zh-Hans=zh-CN")
 # Get the number of cores
