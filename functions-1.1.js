@@ -106,6 +106,11 @@ function build_table(data) {
             key: "publicanlog",
             label: "Publican Log",
             allowHTML: true
+        },
+        {
+            key: "publicanbook",
+            label: "Publican ZIP",
+            allowHTML: true
         }
     ];
     var sortableColumns = ["id", "product", "title", "version"];
