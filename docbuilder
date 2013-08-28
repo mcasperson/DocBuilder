@@ -22,6 +22,12 @@ CORE_COUNT=`grep -c ^processor /proc/cpuinfo`
 MAX_PROCESSES=$((CORE_COUNT*2))
 # The index file that is built up with each loop over the content specs
 INDEX_TMP_FILE=/tmp/index.html
+# The Apache root html directory
+APACHE_HTML_DIR=/var/www/html
+# The directory that holds the Publican ZIP files
+PUBLICAN_BOOK_ZIPS=/books
+# The complete directory that holds the Publican ZIP files
+PUBLICAN_BOOK_ZIPS_COMPLETE=${APACHE_HTML_DIR}${PUBLICAN_BOOK_ZIPS}
 
 # Print the setup info
 echo "Number of Cores: ${CORE_COUNT}"
@@ -34,6 +40,12 @@ if [[ ! -x "$BOOK_BUILD_SCRIPT" ]]
 then
     echo "Build script '$BOOK_BUILD_SCRIPT' is not executable or doesn't exist"
     exit 1
+fi
+
+# make sure the publican directory exists
+if [[ ! -d "${PUBLICAN_BOOK_ZIPS_COMPLETE}" ]]
+then
+    mkdir "${PUBLICAN_BOOK_ZIPS_COMPLETE}"
 fi
 
 # Load the last rebuild time
@@ -175,11 +187,11 @@ do
 		fi
 
 		# A sanity check to make sure that we are not skipping content specs that failed to build for some reason
-               	if [ ! -f /var/www/html/${CS_ID}/index.html ]
-                then
+		if [ ! -f /var/www/html/${CS_ID}/index.html ]
+		then
 			if [ -f ${CS_FILENAME} ]
 			then
-                       		echo "Last build for ${CS_ID} failed because there is no index.html"
+				echo "Last build for ${CS_ID} failed because there is no index.html"
 			else
 				echo "Last compile data was not found for ${CS_ID} and was set to now."
 			fi
@@ -218,6 +230,20 @@ do
 
 		LAST_COMPILE=$(head -n 1 ${CS_FILENAME})
 
+		# Build the book
+		if [ ${RECOMPILE} = "true" ]
+		then
+			echo Recompiling ${CS_ID}
+		
+			${BOOK_BUILD_SCRIPT} ${CS_ID} ${CS_ID} > /dev/null 2>&1 &
+		fi
+		
+		# find the latest publican file
+		unset -v LATEST_PUBLICAN_BOOK
+		for file in "${PUBLICAN_BOOK_ZIPS_COMPLETE}"/${CS_ID}-*; do
+			[[ $file -nt ${LATEST_PUBLICAN_BOOK} ]] && LATEST_PUBLICAN_BOOK=$file
+		done
+		
 		# Add an entry to the index page
 		echo "{ 
 			idRaw: ${CS_ID}, 
@@ -228,17 +254,10 @@ do
 			product: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${PRODUCT}</a>', 
 			titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', remarks: '<a href=\"${CS_ID}/remarks\"><button>With Remarks</button></a>', 
 			buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , 
-			publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>', 
+			publicanbook: '<a href=\"${PUBLICAN_BOOK_ZIPS}/${LATEST_PUBLICAN_BOOK}\"><button>Publican ZIP</button></a>', 
+			publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>',
 			lastcompile: '${LAST_COMPILE}'
 		}," >> ${INDEX_TMP_FILE}
-		
-		# Build the book
-		if [ ${RECOMPILE} = "true" ]
-		then
-			echo Recompiling ${CS_ID}
-		
-			${BOOK_BUILD_SCRIPT} ${CS_ID} ${CS_ID} > /dev/null 2>&1 &
-		fi	
 		
 		# Break here to process only 1 content spec. This is useful when testing code changes.
 		#break

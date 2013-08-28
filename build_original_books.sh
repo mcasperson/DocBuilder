@@ -3,6 +3,12 @@
 TMP_DIR=/tmp/buildbooks
 BOOKNAME=Book
 EXPECTED_ARGS=2
+# The Apache root html directory
+APACHE_HTML_DIR=/var/www/html
+# The directory that holds the Publican ZIP files
+PUBLICAN_BOOK_ZIPS=/books
+# The complete directory that holds the Publican ZIP files
+PUBLICAN_BOOK_ZIPS_COMPLETE=${APACHE_HTML_DIR}${PUBLICAN_BOOK_ZIPS}
 
 if [ "$#" -lt ${EXPECTED_ARGS} ]
 then
@@ -145,7 +151,19 @@ do
 					  cp -R tmp/en-US/html-single/. /var/www/html/${CSPID}/remarks
 
 					  cp publican.log /var/www/html/${CSPID}/remarks
+					  
+					  # Build the publican zip file without editor links
+					  DATE_MARKER=$(date '+%Y-%m-%dT%k:%M:%S.000%z')
+					  BOOK_FILE_NAME="${PUBLICAN_BOOK_ZIPS_COMPLETE}/${CSPID} ${DATE_MARKER}.zip"
+					  
+					  if [ -f ${BOOK_FILE_NAME} ]
+						then
+									rm -rf "${BOOK_FILE_NAME}"
+						fi
 
+					  echo "csprocessor build --permissive --output "${BOOK_FILE_NAME}" ${CSPID} >> build.log"
+					  csprocessor build --permissive --output "${BOOK_FILE_NAME}" ${CSPID} >> build.log
+					  
           fi
 				popd
 
