@@ -244,6 +244,15 @@ do
 			[[ $file -nt ${LATEST_PUBLICAN_BOOK} ]] && LATEST_PUBLICAN_BOOK=$file
 		done
 		
+		# Find the number of Publican ZIP files for this spec
+		PUBLICAN_ZIP_COUNT=$(find "${PUBLICAN_BOOK_ZIPS_COMPLETE}" -maxdepth 1 -type f -name "${CS_ID}*.zip" | wc -l)
+		
+		# Remove any old Publican ZIP files if there are more than two
+		if [[ ${PUBLICAN_ZIP_COUNT} -gt "1" ]]
+		then
+				find $PUBLICAN_BOOK_ZIPS_COMPLETE -name "${CS_ID}*.zip" -type f -mmin +360 -delete
+		fi
+		
 		# Add an entry to the index page
 		echo "{ 
 			idRaw: ${CS_ID}, 
