@@ -1,0 +1,7 @@
+unset -v LATEST_PUBLICAN_BOOK
+for file in "/var/www/html/books/6177*"; do
+	[[ $file -nt ${LATEST_PUBLICAN_BOOK} ]] && LATEST_PUBLICAN_BOOK=$file
+done
+echo ${LATEST_PUBLICAN_BOOK} 
+
+find /var/www/html/books -name 6177* -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" "
