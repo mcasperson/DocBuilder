@@ -240,7 +240,7 @@ do
 		
 		# find the latest publican file
 		unset -v LATEST_PUBLICAN_BOOK
-		for file in "${PUBLICAN_BOOK_ZIPS_COMPLETE}"/${CS_ID}-*; do
+		for file in "${PUBLICAN_BOOK_ZIPS_COMPLETE}"/${CS_ID}*; do
 			[[ $file -nt ${LATEST_PUBLICAN_BOOK} ]] && LATEST_PUBLICAN_BOOK=$file
 		done
 		
