@@ -254,7 +254,7 @@ do
 		fi
 		
 		# URL Encode the link to the Publican book
-		ESCAPED_PUBLICAN_BOOK_URL="$(perl -MURI::Escape -e 'print uri_escape(${PUBLICAN_BOOK_ZIPS}/${LATEST_PUBLICAN_BOOK});')"
+		ESCAPED_PUBLICAN_BOOK_URL="$(perl -MURI::Escape -e 'print uri_escape("${PUBLICAN_BOOK_ZIPS}/${LATEST_PUBLICAN_BOOK}");')"
 		
 		# Add an entry to the index page
 		echo "{ 
