@@ -239,7 +239,7 @@ do
 		fi
 		
 		# find the latest publican file
-		LATEST_PUBLICAN_BOOK=$(find "${PUBLICAN_BOOK_ZIPS_COMPLETE}" -name ${CS_ID}* -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
+		LATEST_PUBLICAN_BOOK=$(find "${PUBLICAN_BOOK_ZIPS_COMPLETE}" -name "${CS_ID}*.zip" -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d" ")
 		
 		# Find the number of Publican ZIP files for this spec
 		PUBLICAN_ZIP_COUNT=$(find "${PUBLICAN_BOOK_ZIPS_COMPLETE}" -maxdepth 1 -type f -name "${CS_ID}*.zip" | wc -l)
