@@ -254,7 +254,7 @@ do
 		fi
 		
 		# URL Encode the link to the Publican book
-		ESCAPED_PUBLICAN_BOOK_URL=$(perl -MURI::Escape -e "print uri_escape(\"${PUBLICAN_BOOK_ZIPS}/${LATEST_PUBLICAN_BOOK_FILENAME}\");")
+		ESCAPED_PUBLICAN_BOOK_URL=$(perl -MURI::Escape -e "print uri_escape(\"${LATEST_PUBLICAN_BOOK_FILENAME}\");")
 		
 		# Add an entry to the index page
 		echo "{ 
@@ -266,7 +266,7 @@ do
 			product: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\" target=\"_top\">${PRODUCT}</a>', 
 			titleRaw: '${TITLE}', title: '<a href=\"http://skynet.usersys.redhat.com:8080/pressgang-ccms-ui/#DocBuilderView;${CS_ID}\"  target=\"_top\">${TITLE}</a>', remarks: '<a href=\"${CS_ID}/remarks\"><button>With Remarks</button></a>', 
 			buildlog: '<a href=\"${CS_ID}/build.log\"><button>Build Log</button></a>' , 
-			publicanbook: '<a href=\"${ESCAPED_PUBLICAN_BOOK_URL}\"><button>Publican ZIP</button></a>', 
+			publicanbook: '<a href=\"${PUBLICAN_BOOK_ZIPS}/${ESCAPED_PUBLICAN_BOOK_URL}\"><button>Publican ZIP</button></a>', 
 			publicanlog: '<a href=\"${CS_ID}/publican.log\"><button>Publican Log</button></a>',
 			lastcompile: '${LAST_COMPILE}'
 		}," >> ${INDEX_TMP_FILE}
