@@ -272,7 +272,7 @@ do
 		}," >> ${INDEX_TMP_FILE}
 		
 		# Break here to process only 1 content spec. This is useful when testing code changes.
-		break
+		#break
 
 		# Add a small sleep to give the server a break
 		sleep .25
