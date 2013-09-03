@@ -31,6 +31,9 @@ PUBLICAN_BOOK_ZIPS_COMPLETE=${APACHE_HTML_DIR}${PUBLICAN_BOOK_ZIPS}
 # The server to connect to
 PRESSGANG_REST_SERVER=skynet.usersys.redhat.com:8080
 #PRESSGANG_REST_SERVER=skynet-dev.usersys.redhat.com:8080
+# The format of the dates sent to the rest server
+DATE_FORMAT=+%Y-%m-%dT%H:%M:%S.000%:z
+#DATE_FORMAT=+%Y-%m-%dT%k:%M:%S.000%z
 
 # Print the setup info
 echo "Number of Cores: ${CORE_COUNT}"
@@ -165,7 +168,7 @@ do
 	for CS_ID in ${CURL_SPECS_COMMAND}
 	do
 		#CONTENT_SPEC=$(curl --silent http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/topic/get/json/${CS_ID})
-		CONTENT_SOEC=$(curl --silent http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/contentspec/get/json+text/${CS_ID})
+		CONTENT_SPEC=$(curl --silent http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/contentspec/get/json+text/${CS_ID})
 		
 		TITLE=$(echo ${CONTENT_SPEC} | grep -Po '(?<="title":").*?(?=",)')
 		PRODUCT=$(echo ${CONTENT_SPEC} | sed -n "s/^.*\\\nProduct\\s*=\\s*\([0-9A-Za-z_.][0-9A-Za-z_. -]*\)\(\\\\r\)\?\\\\n.*$/\1/p")
@@ -211,7 +214,9 @@ do
 				echo "Last compile data was not found for ${CS_ID} and was set to now."
 			fi
 
-			date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
+			DATE=$(date "${DATE_FORMAT}")
+			echo ${DATE} > ${CS_FILENAME}			
+
 		else
 			# Check for the last time we recompiled the content spec
 			if [ -f ${CS_FILENAME} ]
@@ -235,12 +240,12 @@ do
 					RECOMPILE=false
 					echo "No changes were found for ${CS_ID}."
 				else
-					date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
+					date "${DATE_FORMAT}" > ${CS_FILENAME}
 				fi
 			else
 				echo "Last compile data was not found for ${CS_ID} and was set to now."
 		
-				date '+%Y-%m-%dT%k:%M:%S.000%z' > ${CS_FILENAME}
+				date "${DATE_FORMAT}" > ${CS_FILENAME}
 			fi
 		fi		
 
@@ -292,7 +297,7 @@ do
 		}," >> ${INDEX_TMP_FILE}
 		
 		# Break here to process only 1 content spec. This is useful when testing code changes.
-		#break
+		break
 
 		# Add a small sleep to give the server a break
 		sleep .25
