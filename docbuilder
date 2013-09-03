@@ -63,17 +63,24 @@ fi
 while "true"
 do
 	NOW=`date +%s`
-        if [ ${LAST_REBUILD} != 0 ]
-        then
-            	DIFF=$((${NOW}-${LAST_REBUILD}))
-                REBUILD_TIME=`echo "$((${DIFF}%3600/60+1)) mins"`
-        else
-            	REBUILD_TIME="Unknown"
-        fi
+	if [ ${LAST_REBUILD} != 0 ]
+	then
+				DIFF=$((${NOW}-${LAST_REBUILD}))
+					REBUILD_TIME=`echo "$((${DIFF}%3600/60+1)) mins"`
+	else
+				REBUILD_TIME="Unknown"
+	fi
+
+	# Create the data directory if it does not exist
+	if [ ! -d ${DOCBUILDER_DATA_DIR} ]
+	then
+		echo Data directory was not present, and was created.
+		mkdir -p ${DOCBUILDER_DATA_DIR}
+	fi
 
 	# Store the last rebuild timestamp
-        echo ${NOW} > ${REBUILD_FILE}
-        LAST_REBUILD=${NOW}
+	echo ${NOW} > ${REBUILD_FILE}
+	LAST_REBUILD=${NOW}
 
 	# Dump the HTML header boilderplate	
 	echo "<html> 
@@ -152,8 +159,8 @@ do
             var data = [" > ${INDEX_TMP_FILE}
 
 	# The curl command to return the list of specs
-	#CURL_SPECS_COMMAND=$(curl --silent 'http://${PRESSGANG_REST_SERVER}:8080/pressgang-ccms/rest/1/topics/get/json/query;tag268=1?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D' | grep -Po '(?<="id":)[0-9]+')
-	CURL_SPECS_COMMAND=$(curl --silent http://${PRESSGANG_REST_SERVER}:8080/pressgang-ccms/rest/1/contentspecs/get/json/query;?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22contentSpecs%22%7D%7D%5D%7D | grep -Po '(?<="id":)[0-9]+')
+	#CURL_SPECS_COMMAND=$(curl --silent 'http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/topics/get/json/query\;tag268=1?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D' | grep -Po '(?<="id":)[0-9]+')
+	CURL_SPECS_COMMAND=$(curl --silent http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/contentspecs/get/json/query\;?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22contentSpecs%22%7D%7D%5D%7D | grep -Po '(?<="id":)[0-9]+')
             
 	# Loop over each content spec ID
 	for CS_ID in ${CURL_SPECS_COMMAND}
@@ -286,7 +293,7 @@ do
 		}," >> ${INDEX_TMP_FILE}
 		
 		# Break here to process only 1 content spec. This is useful when testing code changes.
-		#break
+		break
 
 		# Add a small sleep to give the server a break
 		sleep .25
@@ -345,6 +352,8 @@ do
 	rm -f /var/www/html/index.html.old
 	mv /var/www/html/index.html /var/www/html/index.html.old
 	cp  ${INDEX_TMP_FILE} /var/www/html
+	
+	echo "Finished rebuild of specs. Sleeping for a minute until starting again"
 	
 	# Give the server a break before starting again
 	sleep 60
