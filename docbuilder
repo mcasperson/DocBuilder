@@ -29,9 +29,8 @@ PUBLICAN_BOOK_ZIPS=/books
 # The complete directory that holds the Publican ZIP files
 PUBLICAN_BOOK_ZIPS_COMPLETE=${APACHE_HTML_DIR}${PUBLICAN_BOOK_ZIPS}
 # The server to connect to
-#PRESSGANG_REST_SERVER=skynet.usersys.redhat.com:8080
-PRESSGANG_REST_SERVER=skynet-dev.usersys.redhat.com:8080
-
+PRESSGANG_REST_SERVER=skynet.usersys.redhat.com:8080
+#PRESSGANG_REST_SERVER=skynet-dev.usersys.redhat.com:8080
 
 # Print the setup info
 echo "Number of Cores: ${CORE_COUNT}"
