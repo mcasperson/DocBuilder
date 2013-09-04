@@ -31,7 +31,8 @@ PUBLICAN_BOOK_ZIPS_COMPLETE=${APACHE_HTML_DIR}${PUBLICAN_BOOK_ZIPS}
 # The server to connect to
 PRESSGANG_REST_SERVER=skynet.usersys.redhat.com:8080
 #PRESSGANG_REST_SERVER=skynet-dev.usersys.redhat.com:8080
-# The format of the dates sent to the rest server
+# The format of the dates sent to the rest server. Note that the format "+%Y-%m-%dT%H:%M:%S.000%:z" was required on the dev server,
+# but the original format was "+%Y-%m-%dT%H:%M:%S.000%:z". Will have to investigate this.
 DATE_FORMAT=+%Y-%m-%dT%H:%M:%S.000%:z
 #DATE_FORMAT=+%Y-%m-%dT%k:%M:%S.000%z
 
@@ -297,7 +298,7 @@ do
 		}," >> ${INDEX_TMP_FILE}
 		
 		# Break here to process only 1 content spec. This is useful when testing code changes.
-		break
+		#break
 
 		# Add a small sleep to give the server a break
 		sleep .25
