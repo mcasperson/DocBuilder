@@ -69,8 +69,8 @@ do
 
 	date > build.log
 
-		echo "csprocessor build --lang ${BUILD_LANG} --flatten --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
-		csprocessor build --lang ${BUILD_LANG} --flatten --editor-links --show-report --permissive --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
+		echo "csprocessor build --lang ${BUILD_LANG} --flatten --editor-links --show-report --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log"
+		csprocessor build --lang ${BUILD_LANG} --flatten --editor-links --show-report --target-lang ${PUBLICAN_LANG} --output ${BOOKNAME}.zip ${CSPID} >> build.log
 
 		# If the csp build failed then continue to the next item
 		if [ $? != 0 ]
