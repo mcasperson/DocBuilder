@@ -163,7 +163,7 @@ do
 
 	# The curl command to return the list of specs
 	#CURL_SPECS_COMMAND=$(curl --silent 'http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/topics/get/json/query\;tag268=1?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22topics%22%7D%7D%5D%7D' | grep -Po '(?<="id":)[0-9]+')
-	CURL_SPECS_COMMAND=$(curl --silent http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/contentspecs/get/json/query\;?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22contentSpecs%22%7D%7D%5D%7D | grep -Po '(?<="id":)[0-9]+')
+	CURL_SPECS_COMMAND=$(curl --silent http://${PRESSGANG_REST_SERVER}/pressgang-ccms/rest/1/contentspecs/get/json+tex/query\;?expand=%7B%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22contentSpecs%22%7D%2C%20%22branches%22%3A%5B%7B%22trunk%22%3A%7B%22name%22%3A%20%22text%22%7D%7D%5D%7D%5D%7D | grep -Po '(?<="id":)[0-9]+')
             
 	# Loop over each content spec ID
 	for CS_ID in ${CURL_SPECS_COMMAND}
