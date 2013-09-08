@@ -57,8 +57,8 @@ do
 		# Build the book as HTML-SINGLE with no overrides
 		date > build.log
 
-		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log"
-		csprocessor build --flatten --flatten-topics --editor-links --permissive --output ${BOOKNAME}.zip ${CSPID} >> build.log
+		echo "csprocessor build --flatten --flatten-topics --show-report --editor-links  --output ${BOOKNAME}.zip ${CSPID} >> build.log"
+		csprocessor build --flatten --flatten-topics --editor-links --output ${BOOKNAME}.zip ${CSPID} >> build.log
 		
 		CSP_STATUS=$? 
 		
@@ -161,8 +161,8 @@ do
 									rm -rf "${BOOK_FILE_NAME}"
 						fi
 
-					  echo "csprocessor build --permissive --output "${BOOK_FILE_NAME}" ${CSPID} >> build.log"
-					  csprocessor build --permissive --output "${BOOK_FILE_NAME}" ${CSPID} >> build.log
+					  echo "csprocessor build --output "${BOOK_FILE_NAME}" ${CSPID} >> build.log"
+					  csprocessor build --output "${BOOK_FILE_NAME}" ${CSPID} >> build.log
 					  
           fi
 				popd
